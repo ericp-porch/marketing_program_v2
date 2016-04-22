@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
+    url(r'^leads/', include("marketing_program_v2.leads.urls", namespace="leads")),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
