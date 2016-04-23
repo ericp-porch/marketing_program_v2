@@ -14,9 +14,9 @@
     <module name="marketing_program_v2" />
     <option name="launchJavascriptDebuger" value="false" />
     <option name="port" value="8000" />
-    <option name="host" value="localhost" />
+    <option name="host" value="lvh.me" />
     <option name="additionalOptions" value="" />
-    <option name="browserUrl" value="http://localhost:8000/" />
+    <option name="browserUrl" value="http://lvh.me:8000/" />
     <option name="runTestServer" value="false" />
     <option name="runNoReload" value="false" />
     <option name="useCustomRunCommand" value="false" />

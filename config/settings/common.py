@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'marketing_program_v2.users',  # custom users app
     # Your stuff: custom apps go here
+    'marketing_program_v2.leads',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
