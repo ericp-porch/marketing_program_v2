@@ -45,7 +45,7 @@ htmlcov
 # for each changed file, like this:
 # git update-index --assume-unchanged .idea/marketing_program_v2.iml
 !.idea/runConfigurations/
-!.idea/marketing_program_v2.iml
+.idea/marketing_program_v2.iml
 !.idea/vcs.xml
 !.idea/webResources.xml
 
