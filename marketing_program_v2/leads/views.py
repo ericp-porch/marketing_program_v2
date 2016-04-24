@@ -7,8 +7,6 @@ from .models import Fields
 
 from .services import LeadClient
 
-from .models import LeadFields
-
 
 class AboutView(TemplateView):
     # l = LeadClient()
