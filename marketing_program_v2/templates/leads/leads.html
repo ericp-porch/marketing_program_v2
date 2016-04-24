@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% load staticfiles i18n %}
 {% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/multi-select.css' %}"/>
     This is the lead page
 {% endblock %}

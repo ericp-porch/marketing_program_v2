@@ -1,0 +1,20 @@
+body {
+    background-color: lightblue;
+}
+
+select {
+    width: 100%;
+    background-color: lightgreen;
+    opacity: 0.0;
+}
+
+#warning {
+    text-align: center;
+    color: red;
+}
+
+#printer {
+
+}
+
+
