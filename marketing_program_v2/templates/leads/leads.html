@@ -4,5 +4,34 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'css/multi-select.css' %}"/>
-    This is the lead page
+
+<div></div>
+<div id="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
+
+<form action="/" method="get">
+    {% csrf_token %}
+    <select multiple="multiple", name="fields" id="fields">
+    {% for field in fields %}
+        <option value = "{{ field.id }}, {{ field.rest_name }}"> {{ field.displayName }} </option>
+    {% endfor %}
+    </select>
+    <div id="printer">Change</div>
+    <p><input type="submit", id="get_leads" value="Get Leads"></p>
+</form>
+
+<p>
+    <button type="button" onclick="goBack()">Go Back</button>
+</p>
+
+
+<table border = "1">
+    {% for row in content %}
+    <tr>
+        {% for fieldp in row %}
+        <td>{{ fieldp }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}
