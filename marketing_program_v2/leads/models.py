@@ -32,6 +32,9 @@ class Fields(models.Model):
 
     object = FieldsManager()
 
+    class Meta:
+        db_table = "fields"
+
 
 class Leads(models.Model):
     id = models.IntegerField("id", primary_key=True)
