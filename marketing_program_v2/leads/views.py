@@ -23,9 +23,9 @@ class AboutView(TemplateView):
 class LeadView(TemplateView):
     template_name = "leads/view.html"
 
-    def get(self, request):
-        entries = LeadFields.objects.all()
-        return render(request, self.template_name, {'fields': entries})
+    # def get(self, request):
+    #     entries = LeadFields.objects.all()
+    #     return render(request, self.template_name, {'fields': entries})
 
     def post(self, request):
         # result = request.POST.getlist('fields')
