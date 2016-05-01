@@ -67,7 +67,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "marketing",
-        "USER": "",
+        "USER": "knh21905",
         "PASSWORD": "",
         "HOST": "dogpackappinstance.ccz3arfqbkkw.us-west-2.rds.amazonaws.com",
         "PORT": "5432",
