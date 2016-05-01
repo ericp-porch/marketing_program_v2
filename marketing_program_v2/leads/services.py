@@ -61,8 +61,8 @@ class LeadClient(BaseClient):
         return self
 
 
-if __name__ == '__main__':
-    l = LeadClient()
-    print l.with_path('/rest/v1/leads/describe.json').build()
-    print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
+# if __name__ == '__main__':
+    #     l = LeadClient()
+    #     print l.with_path('/rest/v1/leads/describe.json').build()
+    #     print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
     # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22]).build()
