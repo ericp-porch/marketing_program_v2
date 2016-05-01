@@ -54,6 +54,7 @@ class LeadClient(BaseClient):
         d = dict(filterValues=','.join(str(x) for x in ids))
         d['filterType'] = filter_type
         d['fields'] = ','.join(field for field in fields)
+
         self.param = d
         return self
 
@@ -61,10 +62,8 @@ class LeadClient(BaseClient):
         self.param = param
         return self
 
-
-# if __name__ == '__main__':
-#         l = LeadClient()
-        # print l.with_path('/rest/v1/leads/describe.json').build()
-        # print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
-        # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24]).build()
-        # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24], ['company', 'site']).build()
+    # if __name__ == '__main__':
+    #     l = LeadClient()
+    #     print l.with_path('/rest/v1/leads/describe.json').build()
+    #     print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
+    # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22]).build()
