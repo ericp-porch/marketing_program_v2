@@ -13,6 +13,9 @@ class Fields(models.Model):
     soap_name = models.CharField("soapName", max_length=255)
     soap_read_only = models.NullBooleanField("soapReadOnly")
 
+    class Meta:
+        db_table = "fields"
+
 
 class Leads(models.Model):
     id = models.IntegerField("id", primary_key=True)
@@ -22,3 +25,6 @@ class Leads(models.Model):
     last_name = models.CharField("lastName", max_length=255, null=True)
     first_name = models.CharField("firstName", max_length=255, null=True)
     document = JSONField("document", null=True)
+
+    class Meta:
+        db_table = "leads"
