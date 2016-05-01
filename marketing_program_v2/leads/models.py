@@ -31,9 +31,6 @@ class Fields(models.Model):
         db_table = "fields"
 
     object = FieldsManager()
-    
-    class Meta:
-        db_table = "fields"
 
 
 class Leads(models.Model):
