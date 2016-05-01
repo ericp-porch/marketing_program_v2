@@ -1,19 +1,68 @@
-import json
+import ast
 import os
+import urllib
+from urlparse import urlunparse
+
 import requests
 
-key_ = os.environ["SECRET_KEY"]
-id_ = os.environ["SECRET_ID"]
-instance_ = os.environ["INSTANCE"]
-base_url = 'mktorest.com'
 
-client_id = '&client_id=53a15ef6-b27b-4a07-b5a4-596788ab3165'
-client_secret = '&client_secret=10GLrCjCZrEC91Bf5iCJ6YbHXklVNDCv'
-instance = '942-MYM-356'
+class BaseClient:
+    def __init__(self):
+        self.url = '942-MYM-356.mktorest.com'
+        self.path = ''
+        self.param = ''
+        self.headers = ''
+
+    def set_headers(self):
+        token = self.get_token()
+        self.headers = {'Authorization': 'Bearer ' + ast.literal_eval(token.text)["access_token"]}
+        return self
+
+    def get_token(self):
+        self.path = '/identity/oauth/token'
+        dict = {'grant_type': 'client_credentials', 'client_id': os.environ['SECRET_ID'],
+                'client_secret': os.environ['SECRET_KEY']}
+        self.param = urllib.urlencode(dict)
+        return requests.get(self)
+
+    def __str__(self):
+        if isinstance(self.param, dict):
+            return urlunparse(("https", self.url, self.path, "", urllib.urlencode(self.param), ""))
+        else:
+            return urlunparse(("https", self.url, self.path, "", self.param, ""))
+
+    def build(self):
+        return requests.get(url=self, headers=self.headers).text
 
 
-def get_auth():
-    identity_url = 'https://942-MYM-356.mktorest.com/identity/oauth/token?grant_type=client_credentials&&client_id=53a15ef6-b27b-4a07-b5a4-596788ab3165&client_secret=10GLrCjCZrEC91Bf5iCJ6YbHXklVNDCv'
-    response = requests.request(identity_url)
-    parsed_json = json.loads(response.text)
-    print parsed_json
+class LeadClient(BaseClient):
+    def __init__(self, path='', param=''):
+        BaseClient.__init__(self)
+        self.path = path
+        self.param = param
+
+    def with_path(self, path):
+        self.set_headers()
+        self.path = path
+        return self
+
+    def get_lead(self, lead_id):
+        self.path = self.path.format(id=lead_id)
+        return self
+
+    def get_leads(self, filter_type, ids):
+        d = dict(filterValues=','.join(str(x) for x in ids))
+        d['filterType'] = filter_type
+        self.param = d
+        return self
+
+    def with_param(self, param):
+        self.param = param
+        return self
+
+
+if __name__ == '__main__':
+    l = LeadClient()
+    print l.with_path('/rest/v1/leads/describe.json').build()
+    print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
+    # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22]).build()
