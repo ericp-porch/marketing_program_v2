@@ -14,9 +14,9 @@ class AboutView(TemplateView):
     # l = LeadClient()
     # build = l.with_path('/rest/v1/leads/describe.json').build()
 
-    response = json.load(open('lead_fields.json'))
-    for field in response['result']:
-        Fields.object.create_fields(field)
+    # response = json.load(open('lead_fields.json'))
+    # for field in response['result']:
+    #     Fields.object.create_fields(field)
 
     # f = open('lead_fields.json', 'w')
     # f.write(build)
