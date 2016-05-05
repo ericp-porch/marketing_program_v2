@@ -9,11 +9,11 @@ from .services import LeadClient
 
 
 class AboutView(TemplateView):
-    l = LeadClient()
+    # l = LeadClient()
     # build = l.with_path('/rest/v1/leads/describe.json').build()
-    list = range(1, 101)
-    print list
-    print l.with_path('/rest/v1/leads.json').get_leads('Id', list, ['company', 'site']).build()
+    # list = range(1, 101)
+    # print list
+    # print l.with_path('/rest/v1/leads.json').get_leads('Id', list, ['company', 'site']).build()
 
     response = json.load(open('lead_fields.json'))
     for field in response['result']:
