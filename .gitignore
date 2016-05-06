@@ -51,6 +51,7 @@ htmlcov
 
 config/settings/*
 static/*
+
 # Vim
 
 *~
