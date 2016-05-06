@@ -49,8 +49,8 @@ htmlcov
 !.idea/vcs.xml
 !.idea/webResources.xml
 
-config/*
-
+config/settings/*
+static/*
 # Vim
 
 *~
