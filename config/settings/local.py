@@ -60,3 +60,16 @@ INSTALLED_APPS += ('django_extensions', )
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Your local stuff: Below this line define 3rd party library settings
+
+# DATABASES
+# ------------------------------------------------------------------------------
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "marketing",
+        "USER": "knh21905",
+        "PASSWORD": "",
+        "HOST": "dogpackappinstance.ccz3arfqbkkw.us-west-2.rds.amazonaws.com",
+        "PORT": "5432",
+    }
+}
