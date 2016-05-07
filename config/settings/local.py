@@ -53,7 +53,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # django-extensions
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ('django_extensions', )
+INSTALLED_APPS += ('django_extensions', 'django_tables2')
 
 # TESTING
 # ------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "marketing",
-        "USER": "knh21905",
-        "PASSWORD": "",
+        "USER": "proulx712",
+        "PASSWORD": "git:clone-B2014",
         "HOST": "dogpackappinstance.ccz3arfqbkkw.us-west-2.rds.amazonaws.com",
         "PORT": "5432",
     }

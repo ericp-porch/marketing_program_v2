@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% block content %}
+    This is the command page
+
+    <form action="{% url "leads:command" %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>document</th>
+        </tr>
+        {% for lead in leads %}
+            <tr>
+                <td>{{ lead.id }}</td>
+                <td>{{ lead.document }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

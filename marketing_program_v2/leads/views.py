@@ -1,25 +1,16 @@
 from __future__ import absolute_import, unicode_literals
 
+import ast
+import json
+
 from django.shortcuts import render
 from django.views.generic import TemplateView
-import json
-from .models import Fields
 
+from .models import Fields, Leads
 from .services import LeadClient
 
 
 class AboutView(TemplateView):
-    # l = LeadClient()
-    # build = l.with_path('/rest/v1/leads/describe.json').build()
-    # list = range(1, 101)
-    # print list
-    # print l.with_path('/rest/v1/leads.json').get_leads('Id', list, ['company', 'site']).build()
-
-    response = json.load(open('lead_fields.json'))
-    for field in response['result']:
-        Fields.object.create_fields(field)
-    # f = open('lead_fields.json', 'w')
-    # f.write(build)
     template_name = "leads/leads.html"
 
 
@@ -38,7 +29,23 @@ class LeadView(TemplateView):
         #     result_dict[array_f[0]] = array_f[1]
         # json_response = get_leads(result_dict.values())
         # return JsonResponse(json_response, safe=False)
-        return render(request,"post method")
+        return render(request, "post method")
 
-# def leadview(request):
-#     return render(request, 'leads/view.html')
+
+class CommandView(TemplateView):
+    def post(self, request):
+        # l = LeadClient()
+        # range1 = range(200, 301)
+        # build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
+        # Leads.object.create_leads(json.loads(build).get('result'))
+
+        # f = open('static/leads.json', 'r')
+        # read = f.read()
+        # Leads.object.create_leads(json.loads(read).get('result'))
+
+        leads = Leads.object.all()
+        return render(request, "leads/command.html", context={'leads': leads})
+
+    def get(self, request):
+        print 'this was a get request'
+        return render(request, "leads/command.html")
