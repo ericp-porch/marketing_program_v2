@@ -2,20 +2,33 @@ from __future__ import absolute_import, unicode_literals
 
 from django.shortcuts import render
 from django.views.generic import TemplateView
+import json
+from .models import Fields
 
-from .models import LeadFields
+from .services import LeadClient
 
 
 class AboutView(TemplateView):
+    # l = LeadClient()
+    # build = l.with_path('/rest/v1/leads/describe.json').build()
+    # list = range(1, 101)
+    # print list
+    # print l.with_path('/rest/v1/leads.json').get_leads('Id', list, ['company', 'site']).build()
+
+    response = json.load(open('lead_fields.json'))
+    for field in response['result']:
+        Fields.object.create_fields(field)
+    # f = open('lead_fields.json', 'w')
+    # f.write(build)
     template_name = "leads/leads.html"
 
 
 class LeadView(TemplateView):
     template_name = "leads/view.html"
 
-    def get(self, request):
-        entries = LeadFields.objects.all()
-        return render(request, self.template_name, {'fields': entries})
+    # def get(self, request):
+    #     entries = LeadFields.objects.all()
+    #     return render(request, self.template_name, {'fields': entries})
 
     def post(self, request):
         # result = request.POST.getlist('fields')
