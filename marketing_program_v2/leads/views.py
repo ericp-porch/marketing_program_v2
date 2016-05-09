@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 
-import ast
 import json
 
 from django.shortcuts import render
@@ -35,7 +34,7 @@ class LeadView(TemplateView):
 class CommandView(TemplateView):
     def post(self, request):
         # l = LeadClient()
-        # range1 = range(200, 301)
+        # range1 = range(300, 401)
         # build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
         # Leads.object.create_leads(json.loads(build).get('result'))
 
@@ -47,5 +46,4 @@ class CommandView(TemplateView):
         return render(request, "leads/command.html", context={'leads': leads})
 
     def get(self, request):
-        print 'this was a get request'
         return render(request, "leads/command.html")

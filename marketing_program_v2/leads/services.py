@@ -1,4 +1,5 @@
 import ast
+import json
 import os
 import urllib
 from urlparse import urlunparse
@@ -19,11 +20,14 @@ class BaseClient:
         return self
 
     def get_token(self):
-        self.path = '/identity/oauth/token'
-        dict = {'grant_type': 'client_credentials', 'client_id': os.environ['SECRET_ID'],
-                'client_secret': os.environ['SECRET_KEY']}
-        self.param = urllib.urlencode(dict)
-        return requests.get(self)
+        try:
+            self.path = '/identity/oauth/token'
+            dict = {'grant_type': 'client_credentials', 'client_id': os.environ['SECRET_ID'],
+                    'client_secret': os.environ['SECRET_KEY']}
+            self.param = urllib.urlencode(dict)
+            return requests.get(self)
+        except requests.exceptions.RequestException as e:
+            print e
 
     def __str__(self):
         if isinstance(self.param, dict):
@@ -32,7 +36,15 @@ class BaseClient:
             return urlunparse(("https", self.url, self.path, "", self.param, ""))
 
     def build(self):
-        return requests.get(url=self, headers=self.headers).text
+        try:
+            to_return = requests.get(url=self, headers=self.headers).text
+            if json.loads(to_return).get('success'):
+                return to_return
+            else:
+                return RuntimeError
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return RuntimeError
 
 
 class LeadClient(BaseClient):
@@ -61,9 +73,9 @@ class LeadClient(BaseClient):
         self.param = param
         return self
 
-    # if __name__ == '__main__':
-    #         l = LeadClient()
-    # print l.with_path('/rest/v1/leads/describe.json').build()
-    # print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
-    # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24]).build()
-    # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24], ['company', 'site']).build()
+        # if __name__ == '__main__':
+        #         l = LeadClient()
+        # print l.with_path('/rest/v1/leads/describe.json').build()
+        # print l.with_path('/rest/v1/lead/{id}.json').get_lead(22).build()
+        # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24]).build()
+        # print l.with_path('/rest/v1/leads.json').get_leads('Id', [22, 24], ['company', 'site']).build()
