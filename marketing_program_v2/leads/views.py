@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 import json
 
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
@@ -33,6 +34,8 @@ class LeadView(TemplateView):
 
 class CommandView(TemplateView):
     def post(self, request):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
         # l = LeadClient()
         # range1 = range(300, 401)
         # build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
@@ -46,4 +49,6 @@ class CommandView(TemplateView):
         return render(request, "leads/command.html", context={'leads': leads})
 
     def get(self, request):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
         return render(request, "leads/command.html")
