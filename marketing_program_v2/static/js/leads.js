@@ -20,7 +20,7 @@ $(document).ready(function(){
 // ***********************************Limit amount of selected fields**********************************
 
     $('#fields').change(function(){
-        if($('#fields option:selected').length >= 4){
+        if($('#fields option:selected').length >= 20){
             $('.ms-elem-selectable').prop('disabled', true);
             $("#warning").css("opacity") = "0.0";
 

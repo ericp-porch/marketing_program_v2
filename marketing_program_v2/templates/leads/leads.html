@@ -8,14 +8,27 @@
 <div></div>
 <div id="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
 
-<form action="/" method="get">
+<form action="{% url 'leads:view' %}" method="get">
     {% csrf_token %}
     <select multiple="multiple", name="fields" id="fields">
     {% for field in fields %}
-        <option value = "{{ field.id }}, {{ field.rest_name }}"> {{ field.displayName }} </option>
+      {% if field.rest_name == 'id' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% elif field.rest_name == 'email' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% elif field.rest_name == 'updatedAt' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% elif field.rest_name == 'createdAt' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% elif field.rest_name == 'firstName' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% elif field.rest_name == 'lastName' %}
+        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+      {% else %}
+        <option value = "{{ field.rest_name }}"> {{ field.display_name }} </option>
+      {% endif %}
     {% endfor %}
     </select>
-    <div id="printer">Change</div>
     <p><input type="submit", id="get_leads" value="Get Leads"></p>
 </form>
 

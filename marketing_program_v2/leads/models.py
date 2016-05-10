@@ -33,6 +33,7 @@ class Fields(models.Model):
     object = FieldsManager()
 
 
+
 class Leads(models.Model):
     id = models.IntegerField("id", primary_key=True)
     email = models.CharField("email", max_length=255, null=True)
