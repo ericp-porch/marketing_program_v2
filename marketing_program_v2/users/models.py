@@ -16,6 +16,7 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
     client_id = models.CharField(_("Client ID"), blank=True, max_length=255)
     client_secret = models.CharField(_("Client Secret"), blank=True, max_length=255)
+    instance = models.CharField(_("Instance URL"), blank=True, max_length=255)
 
     def __str__(self):
         return self.username

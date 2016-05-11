@@ -1,6 +1,5 @@
 import ast
 import json
-import os
 import urllib
 from urlparse import urlunparse
 
@@ -9,10 +8,12 @@ import requests
 
 class BaseClient:
     def __init__(self):
-        self.url = '942-MYM-356.mktorest.com'
+        self.instance_url = ''
         self.path = ''
         self.param = ''
         self.headers = ''
+        self.client_id = ''
+        self.client_secret = ''
 
     def set_headers(self):
         token = self.get_token()
@@ -22,8 +23,9 @@ class BaseClient:
     def get_token(self):
         try:
             self.path = '/identity/oauth/token'
-            dict = {'grant_type': 'client_credentials', 'client_id': os.environ['SECRET_ID'],
-                    'client_secret': os.environ['SECRET_KEY']}
+
+            dict = {'grant_type': 'client_credentials', 'client_id': self.client_id,
+                    'client_secret': self.client_secret}
             self.param = urllib.urlencode(dict)
             return requests.get(self)
         except requests.exceptions.RequestException as e:
@@ -31,9 +33,9 @@ class BaseClient:
 
     def __str__(self):
         if isinstance(self.param, dict):
-            return urlunparse(("https", self.url, self.path, "", urllib.urlencode(self.param), ""))
+            return urlunparse(("https", self.instance_url, self.path, "", urllib.urlencode(self.param), ""))
         else:
-            return urlunparse(("https", self.url, self.path, "", self.param, ""))
+            return urlunparse(("https", self.instance_url, self.path, "", self.param, ""))
 
     def build(self):
         try:
@@ -48,10 +50,13 @@ class BaseClient:
 
 
 class LeadClient(BaseClient):
-    def __init__(self, path='', param=''):
+    def __init__(self, client_id, client_secret, instance_url, path='', param=''):
         BaseClient.__init__(self)
         self.path = path
         self.param = param
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.instance_url = instance_url
 
     def with_path(self, path):
         self.set_headers()

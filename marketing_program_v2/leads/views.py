@@ -36,8 +36,13 @@ class CommandView(TemplateView):
     def post(self, request):
         if not request.user.is_authenticated():
             return HttpResponseForbidden()
-        # l = LeadClient()
-        # range1 = range(300, 401)
+
+        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        #
+        # build1 = l.with_path('/rest/v1/leads/describe.json').build()
+        # Fields.object.create_fields(json.loads(build1).get('result'))
+
+        # range1 = range(500, 601)
         # build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
         # Leads.object.create_leads(json.loads(build).get('result'))
 
