@@ -30,18 +30,13 @@ $(document).ready(function(){
         }
     })
 
-// ***********************************Return Selected Values**********************************
-    $("form").submit(function(){
-        myList = [];
-        $('#fields option:selected').each(function() {
-            myList.push($(this).val())
-        });
-        var data = myList
-        var table = arrayToTable(data, {
-                thead: false,
-                attrs: {class: 'table'}
-            })
-        $('#printer').html(table);
+// *********************************** Prevent Zero Fields from Being Submitted **********************************
+    $("form[name='fieldselect']").submit(function(stop){
+        if($('#fields option:selected').length == 0){
+            alert('Please Select at Least One Field.');
+            stop.preventDefault(stop);
+
+        }
     })
 
 // *******************************Search and Filter Fields****************************************
@@ -82,6 +77,10 @@ $(document).ready(function(){
     }
 
     });
+
+// ********************************************* DatePicker *******************************************
+
+  $('input[name="start"]').daterangepicker();
 
 // *********************************  ************************************
 

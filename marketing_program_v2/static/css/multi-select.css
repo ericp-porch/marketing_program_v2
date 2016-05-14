@@ -23,7 +23,7 @@
   width: 30%;
 }
 .ms-container .ms-selection{
-  float: right;
+  float: left;
 }
 
 .ms-container .ms-list{
@@ -96,4 +96,7 @@
 
 .search-input {
     width: 90%;
+
 }
+
+

@@ -8,9 +8,9 @@
 <div></div>
 <div id="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
 
-<form action="{% url 'leads:view' %}" method="get">
+<form action="filter/" method="post" name="fieldselect">
     {% csrf_token %}
-    <select multiple="multiple", name="fields" id="fields">
+    <select multiple="multiple", name="selectfields" id="fields">
     {% for field in fields %}
       {% if field.rest_name == 'id' %}
         <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>

@@ -7,14 +7,15 @@ from django.db import models
 class FieldsManager(models.Manager):
     def create_fields(self, field_dict):
         field = self.get_or_create(id=field_dict['id'],
-                                   display_name=field_dict['displayName'],
-                                   data_type=field_dict['dataType'],
-                                   length=field_dict['length'] if 'length' in field_dict else None,
-                                   rest_name=field_dict['rest']['name'] if 'rest' in field_dict else '',
-                                   rest_read_only=field_dict['rest']['readOnly'] if 'rest' in field_dict else None,
-                                   soap_name=field_dict['soap']['name'] if 'soap' in field_dict else '',
-                                   soap_read_only=field_dict['soap']['readOnly'] if 'soap' in field_dict else None)
+        display_name=field_dict['displayName'],
+        data_type=field_dict['dataType'],
+        length=field_dict['length'] if 'length' in field_dict else None,
+        rest_name=field_dict['rest']['name'] if 'rest' in field_dict else '',
+        rest_read_only=field_dict['rest']['readOnly'] if 'rest' in field_dict else None,
+        soap_name=field_dict['soap']['name'] if 'soap' in field_dict else '',
+        soap_read_only=field_dict['soap']['readOnly'] if 'soap' in field_dict else None)
         return field
+
 
 
 class Fields(models.Model):
@@ -45,3 +46,8 @@ class Leads(models.Model):
 
     class Meta:
         db_table = "leads"
+
+
+# tutorial/models.py
+class Person(models.Model):
+    name = models.CharField(verbose_name="full name", max_length=255)

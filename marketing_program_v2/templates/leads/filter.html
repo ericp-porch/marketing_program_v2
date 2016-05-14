@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% block content %}
+<---- Date Range Picker
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<---- Date Range Picker
+
+    This is the filter page
+
+<hr>
+<h3>Integer Filter</h3>
+<form name="integer">
+  IntegerRange: <input type="number"> to <input type="number">
+</form>
+<hr>
+<h3>Date Filter</h3>
+<form name="date">
+  From<input type="text" class="datepicker" name="start">
+  To<input type="text" class="datepicker" name="end">
+</form>
+<hr>
+
+
+{% endblock %}
