@@ -1,9 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 
+import json
+
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import Leads, LeadsTable
+from .models import Leads
+from .services import LeadClient
 
 
 class AboutView(TemplateView):
@@ -43,27 +46,25 @@ class CommandView(TemplateView):
         if not request.user.is_authenticated():
             return render(request, "404.html")
 
-        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
         # build1 = l.with_path('/rest/v1/leads/describe.json').build()
         # Fields.object.create_fields(json.loads(build1).get('result'))
-
-        # range1 = range(500, 601)
-        # build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
-        # Leads.object.create_leads(json.loads(build).get('result'))
+        for x in range(600, 10000, 100):
+            range1 = range(x, x + 101)
+            build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
+            Leads.object.create_leads(json.loads(build).get('result'))
 
         # f = open('static/leads.json', 'r')
         # read = f.read()
         # Leads.object.create_leads(json.loads(read).get('result'))
 
         values = Leads.object.all()[:1].values('document')[0].get('document').keys()
-        leads = Leads.object.all().values('document')
-        table = LeadsTable(Leads.object.all())
-        return render(request, "leads/command.html",
-                      context={'leads': leads, 'values': values, 'table': table})
+        leads = Leads.object.all()[:100].values('document')
+
+        return render(request, "leads/command.html", context={'leads': leads, 'values': values})
 
     def get(self, request):
         if not request.user.is_authenticated():
             return render(request, "404.html")
-        table = LeadsTable(Leads.object.all())
-        return render(request, "leads/command.html", context={'table': table})
+        return render(request, "leads/command.html")
