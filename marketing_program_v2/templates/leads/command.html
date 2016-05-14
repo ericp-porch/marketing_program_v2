@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+{% load django_tables2 %}
+{% block content %}
+
+    This is the command page
+
+    <form action="{% url "leads:command" %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+    {% render_table table %}
+    <table border="1">
+        <tr>
+            {% for value in values %}
+                <th>{{ value }}</th>
+            {% endfor %}
+        </tr>
+        {% for lead in leads %}
+            <tr>
+                {% for field in lead.document.values %}
+                    <td>{{ field }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

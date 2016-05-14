@@ -2,19 +2,37 @@ from __future__ import unicode_literals
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django_tables2 import tables
 
 
 class FieldsManager(models.Manager):
-    def create_fields(self, field_dict):
-        field = self.get_or_create(id=field_dict['id'],
-                                   display_name=field_dict['displayName'],
+    def create_fields(self, fields):
+        fields_to_add = []
+        for field_dict in fields:
+            field = Fields(id=field_dict['id'],
+                           display_name=field_dict['displayName'],
+                           data_type=field_dict['dataType'],
+                           length=field_dict['length'] if 'length' in field_dict else None,
+                           rest_name=field_dict['rest']['name'] if 'rest' in field_dict else '',
+                           rest_read_only=field_dict['rest'][
+                               'readOnly'] if 'rest' in field_dict else None,
+                           soap_name=field_dict['soap']['name'] if 'soap' in field_dict else '',
+                           soap_read_only=field_dict['soap'][
+                               'readOnly'] if 'soap' in field_dict else None)
+            self_filter = self.filter(id=field.id)
+            if self_filter.exists():
+                self_filter.update(display_name=field_dict['displayName'],
                                    data_type=field_dict['dataType'],
                                    length=field_dict['length'] if 'length' in field_dict else None,
                                    rest_name=field_dict['rest']['name'] if 'rest' in field_dict else '',
-                                   rest_read_only=field_dict['rest']['readOnly'] if 'rest' in field_dict else None,
+                                   rest_read_only=field_dict['rest'][
+                                       'readOnly'] if 'rest' in field_dict else None,
                                    soap_name=field_dict['soap']['name'] if 'soap' in field_dict else '',
-                                   soap_read_only=field_dict['soap']['readOnly'] if 'soap' in field_dict else None)
-        return field
+                                   soap_read_only=field_dict['soap'][
+                                       'readOnly'] if 'soap' in field_dict else None)
+            else:
+                fields_to_add.append(field)
+        self.bulk_create(fields_to_add)
 
 
 class Fields(models.Model):
@@ -33,6 +51,25 @@ class Fields(models.Model):
     object = FieldsManager()
 
 
+class LeadsManager(models.Manager):
+    def create_leads(self, leads):
+        objs = []
+        for lead in leads:
+            to_add = Leads(id=lead['id'], email=lead['email'], updated_at=lead['updatedAt'],
+                           created_at=lead['createdAt'],
+                           last_name=lead['lastName'], first_name=lead['firstName'], document=lead)
+
+            existing_lead = self.filter(id=to_add.id)
+            if existing_lead.exists():
+                existing_lead.update(email=lead['email'], updated_at=lead['updatedAt'],
+                                     created_at=lead['createdAt'],
+                                     last_name=lead['lastName'], first_name=lead['firstName'], document=lead)
+            else:
+                objs.append(to_add)
+
+        self.bulk_create(objs)
+
+
 class Leads(models.Model):
     id = models.IntegerField("id", primary_key=True)
     email = models.CharField("email", max_length=255, null=True)
@@ -44,3 +81,10 @@ class Leads(models.Model):
 
     class Meta:
         db_table = "leads"
+
+    object = LeadsManager()
+
+
+class LeadsTable(tables.Table):
+    class Meta:
+        model = Leads
