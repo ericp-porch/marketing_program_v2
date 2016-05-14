@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django_tables2 import tables
 
 
 class FieldsManager(models.Manager):
@@ -82,3 +83,8 @@ class Leads(models.Model):
         db_table = "leads"
 
     object = LeadsManager()
+
+
+class LeadsTable(tables.Table):
+    class Meta:
+        model = Leads

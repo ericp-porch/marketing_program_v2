@@ -1,27 +1,33 @@
 from __future__ import absolute_import, unicode_literals
 
-import json
-
-from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import Fields, Leads
-from .services import LeadClient
+from .models import Leads, LeadsTable
 
 
 class AboutView(TemplateView):
-    template_name = "leads/leads.html"
+    def get(self, request):
+        if not request.user.is_authenticated():
+            return render(request, "404.html")
+        else:
+            return render(request, "leads/leads.html")
 
 
 class LeadView(TemplateView):
-    template_name = "leads/view.html"
+    def get(self, request):
+        if not request.user.is_authenticated():
+            return render(request, "404.html")
+        else:
+            return render(request, "leads/view.html")
 
     # def get(self, request):
     #     entries = LeadFields.objects.all()
     #     return render(request, self.template_name, {'fields': entries})
 
     def post(self, request):
+        if not request.user.is_authenticated():
+            return render(request, "404.html")
         # result = request.POST.getlist('fields')
         # result_dict = {}
         # for row in result:
@@ -35,7 +41,7 @@ class LeadView(TemplateView):
 class CommandView(TemplateView):
     def post(self, request):
         if not request.user.is_authenticated():
-            return HttpResponseForbidden()
+            return render(request, "404.html")
 
         # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
@@ -50,10 +56,14 @@ class CommandView(TemplateView):
         # read = f.read()
         # Leads.object.create_leads(json.loads(read).get('result'))
 
-        leads = Leads.object.all()
-        return render(request, "leads/command.html", context={'leads': leads})
+        values = Leads.object.all()[:1].values('document')[0].get('document').keys()
+        leads = Leads.object.all().values('document')
+        table = LeadsTable(Leads.object.all())
+        return render(request, "leads/command.html",
+                      context={'leads': leads, 'values': values, 'table': table})
 
     def get(self, request):
         if not request.user.is_authenticated():
-            return HttpResponseForbidden()
-        return render(request, "leads/command.html")
+            return render(request, "404.html")
+        table = LeadsTable(Leads.object.all())
+        return render(request, "leads/command.html", context={'table': table})
