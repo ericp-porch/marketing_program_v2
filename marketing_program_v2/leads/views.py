@@ -46,14 +46,14 @@ class CommandView(TemplateView):
         if not request.user.is_authenticated():
             return render(request, "404.html")
 
-        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
         # build1 = l.with_path('/rest/v1/leads/describe.json').build()
         # Fields.object.create_fields(json.loads(build1).get('result'))
-        for x in range(600, 10000, 100):
-            range1 = range(x, x + 101)
-            build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
-            Leads.object.create_leads(json.loads(build).get('result'))
+        # for x in range(600, 10000, 100):
+        #     range1 = range(x, x + 101)
+        #     build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
+        #     Leads.object.create_leads(json.loads(build).get('result'))
 
         # f = open('static/leads.json', 'r')
         # read = f.read()
