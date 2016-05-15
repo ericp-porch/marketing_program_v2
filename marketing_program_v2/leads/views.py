@@ -4,8 +4,7 @@ import json
 
 from django.shortcuts import render
 from django.views.generic import TemplateView
-
-from .models import Leads
+from .models import Leads, Fields
 from .services import LeadClient
 
 
@@ -46,8 +45,8 @@ class CommandView(TemplateView):
         if not request.user.is_authenticated():
             return render(request, "404.html")
 
+        # LIVE VERSION
         # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-        #
         # build1 = l.with_path('/rest/v1/leads/describe.json').build()
         # Fields.object.create_fields(json.loads(build1).get('result'))
         # for x in range(600, 10000, 100):
@@ -55,6 +54,7 @@ class CommandView(TemplateView):
         #     build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
         #     Leads.object.create_leads(json.loads(build).get('result'))
 
+        # FROM STATIC FILE
         # f = open('static/leads.json', 'r')
         # read = f.read()
         # Leads.object.create_leads(json.loads(read).get('result'))
