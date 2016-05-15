@@ -2,17 +2,20 @@ from django import forms
 
 ########################
 # DATA TYPES INCLUDE:
-# string
-# boolean
-# currency
-# date
-# datetime
+# string =
+# boolean --> true/false
+# currency -> float numbers
+# date =
+# datetime --> same as date
 # email
-# float
+# float =
 # integer
-# phone
-# text
-# url
+# phone --> string
+# text --> string
+# url --> string
+# String, integer, float, string, boolean
+
+
 #######################
 
 class FilterForm(forms.Form):

@@ -5,10 +5,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'css/multi-select.css' %}"/>
 
-<div></div>
 <div id="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
 
-<form action="filter/" method="post" name="fieldselect">
+<form action="view/" method="post" name="fieldselect">
     {% csrf_token %}
     <select multiple="multiple", name="selectfields" id="fields">
     {% for field in fields %}

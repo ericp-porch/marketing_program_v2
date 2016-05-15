@@ -13,8 +13,25 @@ select {
     color: red;
 }
 
-#printer {
-
+table {
+    border-collapse: collapse;
 }
+
+td {
+    font-size: 0.75em;
+}
+
+th, td {
+    padding: 0px, 10px;
+    border: 2px solid black;
+}
+
+table, th, td {
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2}
 
 

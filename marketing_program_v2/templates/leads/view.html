@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 {% load staticfiles i18n %}
 {% block content %}
-    This is the view page
+<link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
+
+<div style="overflow-x:auto;">
+  <table id="leads">
+    <thead>
+      <tr>
+        {% for field in fields %}
+          <th data-field="{{ field }}">{{ field }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for lead in leads %}
+        <tr>
+          {% for field in fields %}
+            {% for key, value in lead.document.items %}
+              {% if field == key %}
+                  <td>{{ value }}</td>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}
