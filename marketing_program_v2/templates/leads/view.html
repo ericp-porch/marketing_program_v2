@@ -3,29 +3,30 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 
+
 <div style="overflow-x:auto;">
-  <table id="leads">
-    <thead>
-      <tr>
-        {% for field in fields %}
-          <th data-field="{{ field }}">{{ field }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for lead in leads %}
+    <table id="leadsTable" class="pageTable">
+      <thead>
         <tr>
           {% for field in fields %}
-            {% for key, value in lead.document.items %}
-              {% if field == key %}
-                  <td>{{ value }}</td>
-              {% endif %}
-            {% endfor %}
+            <th data-field="{{ field }}">{{ field }}</th>
           {% endfor %}
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for lead in leads %}
+          <tr>
+            {% for field in fields %}
+              {% for key, value in lead.document.items %}
+                {% if field == key %}
+                    <td>{{ value }}</td>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 </div>
 
 {% endblock %}

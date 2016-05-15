@@ -22,7 +22,6 @@ class LeadView(AboutView, ListView):
 
     def post(self, request):
         fields = request.POST.getlist('selectfields')
-        print len(fields)
         queryset = Leads.objects.all().values('document')
 
         return render(request, "leads/view.html", {'leads': queryset, 'fields': fields})

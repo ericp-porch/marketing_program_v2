@@ -31,11 +31,11 @@ $(document).ready(function(){
     })
 
 // *********************************** Prevent Zero Fields from Being Submitted **********************************
+
     $("form[name='fieldselect']").submit(function(stop){
         if($('#fields option:selected').length == 0){
             alert('Please Select at Least One Field.');
             stop.preventDefault(stop);
-
         }
     })
 
@@ -80,7 +80,10 @@ $(document).ready(function(){
 
 // ********************************************* Table Pagination *******************************************
 
-//    $('#leads_table').paging({limit:25});
+    $("#leadsTable").simplePagination({
+    perPage: 25
+    });
+
 
 // **********************************************************************************************************
 
