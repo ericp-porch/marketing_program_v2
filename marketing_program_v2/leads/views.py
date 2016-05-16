@@ -10,10 +10,6 @@ class AboutView(ListView):
     model = Fields
     queryset = Fields.object.all()
 
-    # def post(self, request):
-    #     # fields = request.POST.getlist('fieldselect')
-    #     return render(request, 'leads/view.html')
-
 
 class LeadView(AboutView, ListView):
     template_name = "leads/view.html"
@@ -21,10 +17,25 @@ class LeadView(AboutView, ListView):
     model = Leads
 
     def post(self, request):
-        fields = request.POST.getlist('selectfields')
-        queryset = Leads.objects.all().values('document')
 
-        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields})
+        fields = request.POST.getlist('selectfields')
+        # fields=[]
+        # for field in fields_unsorted:
+        #     if field == "id":
+        #         fields.append(field)
+        # for field in fields_unsorted:
+        #     if field != "id":
+        #         fields.append(field)
+
+        queryset = Leads.objects.all().values('document')
+        FieldsEntries = Fields.object.all()
+        datatypes = []
+        for field in fields:
+            for entry in FieldsEntries:
+                if field == entry.rest_name:
+                    datatypes.append(entry.data_type)
+        fielddata = dict(zip(fields, datatypes))
+        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'datatypes': datatypes, 'fielddata': fielddata})
 
 
 class FilterView(TemplateView):

@@ -2,17 +2,17 @@ from django import forms
 
 ########################
 # DATA TYPES INCLUDE:
-# string =
-# boolean --> true/false
-# currency -> float numbers
-# date =
-# datetime --> same as date
-# email
-# float =
-# integer
-# phone --> string
-# text --> string
-# url --> string
+# string = string
+# boolean = true/false
+# currency = float numbers
+# date = date
+# datetime = date
+# email = string
+# float = float
+# integer = integer
+# phone = string
+# text = string
+# url = string
 # String, integer, float, string, boolean
 
 

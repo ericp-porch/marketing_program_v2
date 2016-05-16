@@ -47,7 +47,3 @@ class Leads(models.Model):
     class Meta:
         db_table = "leads"
 
-
-# tutorial/models.py
-class Person(models.Model):
-    name = models.CharField(verbose_name="full name", max_length=255)

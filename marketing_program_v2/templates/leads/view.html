@@ -8,20 +8,38 @@
     <table id="leadsTable" class="pageTable">
       <thead>
         <tr>
-          {% for field in fields %}
-            <th data-field="{{ field }}">{{ field }}</th>
+          {% for field, datatype in fielddata.iteritems %}
+            {% if field == "id" %}
+              <th class="{{ datatype }}">{{ field }}</th>
+            {% endif %}
+          {% endfor %}
+          {% for field, datatype in fielddata.iteritems %}
+            {% if field != "id" %}
+              <th class="{{ datatype }}">{{ field }}</th>
+            {% endif %}
           {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for lead in leads %}
           <tr>
-            {% for field in fields %}
-              {% for key, value in lead.document.items %}
-                {% if field == key %}
-                    <td>{{ value }}</td>
-                {% endif %}
-              {% endfor %}
+            {% for field, datatype in fielddata.iteritems %}
+              {% if field == "id" %}
+                {% for key, value in lead.document.items %}
+                  {% if field == key %}
+                      <td class="{{ datatype }}">{{ value }}</td>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+            {% for field, datatype in fielddata.iteritems %}
+              {% if field != "id" %}
+                {% for key, value in lead.document.items %}
+                  {% if field == key %}
+                      <td class="{{ datatype }}">{{ value }}</td>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             {% endfor %}
           </tr>
         {% endfor %}

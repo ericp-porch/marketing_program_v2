@@ -5,45 +5,31 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'css/multi-select.css' %}"/>
 
-<div id="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
+<div class="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
 
 <form action="view/" method="post" name="fieldselect">
     {% csrf_token %}
     <select multiple="multiple", name="selectfields" id="fields">
     {% for field in fields %}
       {% if field.rest_name == 'id' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% elif field.rest_name == 'email' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% elif field.rest_name == 'updatedAt' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% elif field.rest_name == 'createdAt' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% elif field.rest_name == 'firstName' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% elif field.rest_name == 'lastName' %}
-        <option value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
       {% else %}
-        <option value = "{{ field.rest_name }}"> {{ field.display_name }} </option>
+        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}"> {{ field.display_name }} </option>
       {% endif %}
     {% endfor %}
     </select>
-    <p><input type="submit", id="get_leads" value="Get Leads"></p>
+
+    <input type="submit", id="get_leads" value="Get Leads">
 </form>
-
-<p>
-    <button type="button" onclick="goBack()">Go Back</button>
-</p>
-
-
-<table border = "1">
-    {% for row in content %}
-    <tr>
-        {% for fieldp in row %}
-        <td>{{ fieldp }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
 
 {% endblock %}

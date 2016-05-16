@@ -2,15 +2,13 @@ body {
     background-color: lightblue;
 }
 
-select {
+select#fields {
     width: 100%;
-    background-color: lightgreen;
-    opacity: 0.0;
 }
 
-#warning {
+div.warning {
     text-align: left;
-    color: red;
+    color: lightblue;
 }
 
 table {

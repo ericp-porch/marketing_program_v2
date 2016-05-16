@@ -22,11 +22,10 @@ $(document).ready(function(){
     $('#fields').change(function(){
         if($('#fields option:selected').length >= 20){
             $('.ms-elem-selectable').prop('disabled', true);
-            $("#warning").css("opacity") = "0.0";
+            $('div.warning').css('color','red');
 
         } else {
             $('.ms-elem-selectable').prop('disabled', false);
-            $('#warning').css("opacity") = "1.0";
         }
     })
 
