@@ -7,27 +7,27 @@
 <div style="overflow-x:auto;">
     <table id="leadsTable" class="pageTable">
       <thead>
-        <tr>
+        <tr class="pageTable">
           {% for field, datatype in fielddata.iteritems %}
             {% if field == "id" %}
-              <th class="{{ datatype }}">{{ field }}</th>
+              <th class="pageTable">{{ field }}</th>
             {% endif %}
           {% endfor %}
           {% for field, datatype in fielddata.iteritems %}
             {% if field != "id" %}
-              <th class="{{ datatype }}">{{ field }}</th>
+              <th class="pageTable">{{ field }}</th>
             {% endif %}
           {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for lead in leads %}
-          <tr>
+          <tr class="pageTable">
             {% for field, datatype in fielddata.iteritems %}
               {% if field == "id" %}
                 {% for key, value in lead.document.items %}
                   {% if field == key %}
-                      <td class="{{ datatype }}">{{ value }}</td>
+                      <td class="pageTable"">{{ value }}</td>
                   {% endif %}
                 {% endfor %}
               {% endif %}
@@ -36,7 +36,7 @@
               {% if field != "id" %}
                 {% for key, value in lead.document.items %}
                   {% if field == key %}
-                      <td class="{{ datatype }}">{{ value }}</td>
+                      <td class="pageTable"">{{ value }}</td>
                   {% endif %}
                 {% endfor %}
               {% endif %}
@@ -46,7 +46,63 @@
       </tbody>
     </table>
 </div>
+<hr>
+
+<div id="filterLeads">
+<form>
+<table class="filterTable">
+  <thead>
+    <tr>
+      <th class="filterTable">Field Name</th>
+      <th class="filterTable">Field Filter Condition</th>
+    </tr>
+  </thead>
+  {% for field, datatype in fielddata.iteritems %}
+    {% if datatype in "string email phone text url" %}
+    <tr class="filterTable">
+      <td class="filterTable"><label for="{{ field }}_filter">{{ field }}</label></td>
+      <td class="filterTable"><input type="text" id="{{ field }}_filter"></td>
+    </tr>
+    {% elif datatype in "currency float" %}
+    <tr class="filterTable">
+      <td class="filterTable"><label for="{{ field }}_filter">{{ field }}</label></td>
+      <input type="number" id="{{ field }}_filter"></td>
+    </tr>
+    {% elif datatype in "date datetime" %}
+    <tr class="filterTable">
+      <td class="filterTable">
+        <label for="{{ field }}_start">{{ field }}:Start</label><br>
+        <label for="{{ field }}_end">{{ field }}:End</label>
+      </td>
+      <td class="filterTable">
+        <input type="date" id="{{ field }}_start"><br>
+        <input type="date" id="{{ field }}_end"><br>
+      </td>
+    </tr>
+    {% elif datatype == "boolean" %}
+    <tr class="filterTable">
+      <td class="filterTable">
+        {{ field }}
+      </td>
+      <td class="filterTable">
+        <label for="{{ field }}_true">true</label>
+        <input type="checkbox" id="{{ field }}_true">
+        <label for="{{ field }}_false">false}</label>
+        <input type="checkbox" id="{{ field }}_false">
+      </td>
+    </tr>
+    {% elif datatype == "integer" %}
+    <tr class="filterTable">
+      <td class="filterTable"><label for="{{ field }}_filter">{{ field }}</label></td>
+      <td class="filterTable"><input type="number" id="{{ field }}_filter"></td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+</table>
+  <input type="submit" value="Generate Leads File">
+</form>
+</div>
+
 
 {% endblock %}
-<hr>
-<h1>Filter Table</h1>
+

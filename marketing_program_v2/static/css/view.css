@@ -11,29 +11,58 @@ div.warning {
     color: lightblue;
 }
 
-table {
+/*********************************************
+  CSS for the Lead Display Table
+**********************************************/
+
+table.pageTable {
     border-collapse: collapse;
 }
 
-th {
+th.pageTable {
     background-color: darkblue;
     color: white;
 }
 
-td {
+td.pageTable {
     font-size: 0.75em;
 }
 
-th, td {
+th.pageTable, td.pageTable {
     padding: 0px, 10px;
     border: 2px solid black;
 }
 
-table, th, td {
+table.pageTable, th.pageTable, td.pageTable {
     border: 2px solid black;
     text-align: center;
     vertical-align: middle;
 }
 
+/*********************************************
+  CSS for the Filter Form Table
+**********************************************/
 
+table.filterTable {
+    border-collapse: collapse;
+}
+
+th.filterTable {
+    background-color: darkblue;
+    color: white;
+}
+
+td.filterTable {
+    font-size: 1em;
+}
+
+th.filterTable, td.filterTable {
+    padding: 5px, 5px, 5px, 5px;
+    border: 2px solid black;
+}
+
+table.filterTable, th.filterTable, td.filterTable {
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
 

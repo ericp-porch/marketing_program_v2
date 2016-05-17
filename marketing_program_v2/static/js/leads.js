@@ -80,7 +80,7 @@ $(document).ready(function(){
 // ********************************************* Table Pagination *******************************************
 
     $("#leadsTable").simplePagination({
-    perPage: 25
+    perPage: 10
     });
 
 
