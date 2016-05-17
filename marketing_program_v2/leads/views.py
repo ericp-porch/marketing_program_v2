@@ -19,15 +19,7 @@ class LeadView(AboutView, ListView):
     def post(self, request):
 
         fields = request.POST.getlist('selectfields')
-        # fields=[]
-        # for field in fields_unsorted:
-        #     if field == "id":
-        #         fields.append(field)
-        # for field in fields_unsorted:
-        #     if field != "id":
-        #         fields.append(field)
-
-        queryset = Leads.objects.all().values('document')
+        queryset = Leads.objects.all().values('document')[:100]
         FieldsEntries = Fields.object.all()
         datatypes = []
         for field in fields:
