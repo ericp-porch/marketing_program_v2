@@ -38,6 +38,9 @@
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 0px;
 }
 
+div.navbar.navbar-default.navbar-fixed-bottom {
+    bottom: 0px;
+}

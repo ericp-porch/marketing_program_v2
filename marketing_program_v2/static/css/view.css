@@ -45,24 +45,47 @@ table.pageTable, th.pageTable, td.pageTable {
 
 table.filterTable {
     border-collapse: collapse;
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    table-layout: fixed;
+}
+
+tr.filterTable {
+    width: 100%;
+}
+
+th.filterrow1 {
+  width: 20%;
+}
+
+th.filterrow2 {
+  width: 80%;
 }
 
 th.filterTable {
     background-color: darkblue;
     color: white;
-}
-
-td.filterTable {
-    font-size: 1em;
-}
-
-th.filterTable, td.filterTable {
-    padding: 5px, 5px, 5px, 5px;
-    border: 2px solid black;
-}
-
-table.filterTable, th.filterTable, td.filterTable {
     border: 2px solid black;
     text-align: center;
     vertical-align: middle;
+    padding: 5px, 5px, 5px, 5px;
+    border-bottom: 1px solid #ddd;
+}
 
+td.filterTable {
+    font-size: 0.95em;
+    text-align: left;
+    vertical-align: middle;
+    padding: 5px, 5px, 5px, 5px;
+    border-bottom: 1px solid #000;
+}
+
+/*********************************************
+  CSS for the Filter Form Table
+**********************************************/
+
+table.filtering {
+    width: 100%;
+}

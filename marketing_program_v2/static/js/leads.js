@@ -84,6 +84,13 @@ $(document).ready(function(){
     });
 
 
+// ************************************* Footer Fixed to Bottom of Viewport ************************************
+
+    var footerResize = function() {
+        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
+      };
+      $(window).resize(footerResize).ready(footerResize);
+
 // **********************************************************************************************************
 
 });

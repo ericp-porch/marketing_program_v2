@@ -27,7 +27,18 @@ class LeadView(AboutView, ListView):
                 if field == entry.rest_name:
                     datatypes.append(entry.data_type)
         fielddata = dict(zip(fields, datatypes))
-        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'datatypes': datatypes, 'fielddata': fielddata})
+        string, range, boolean, dummy = 0,0,0,0
+        for field, datatype in fielddata.iteritems():
+            if datatype in "string email phone text url":
+                string += 1
+            elif datatype in "currency float date datetime integer":
+                range += 1
+            elif datatype == "boolean":
+                boolean += 1
+            else:
+                dummy += 1
+        fieldtype = {"string":string, "range":range, "boolean":boolean, "dummy":dummy}
+        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'fielddata': fielddata, 'fieldtype': fieldtype})
 
 
 class FilterView(TemplateView):
