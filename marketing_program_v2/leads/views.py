@@ -43,3 +43,4 @@ class LeadView(AboutView, ListView):
 
 class FilterView(TemplateView):
     template_name = "leads/filter.html"
+
