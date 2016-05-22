@@ -80,9 +80,17 @@ $(document).ready(function(){
 // ********************************************* Table Pagination *******************************************
 
     $("#leadsTable").simplePagination({
-    perPage: 10
+        perPage: 10
     });
 
+// ************************************* Detect is Browser Uses Input_Type:date ************************************
+
+    if (!Modernizr.inputtypes.date) {
+    $('input[type=date]').datepicker({
+        // Consistent format with the HTML5 picker
+        dateFormat: 'yy-mm-dd'
+    });
+}
 
 // ************************************* Footer Fixed to Bottom of Viewport ************************************
 

@@ -2,9 +2,10 @@
 {% load staticfiles i18n %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/datepicker.css' %}"/>
 
 <div style="overflow-x:auto;">
+  <h3>First 100 Leads in Database</h3>
     <table id="leadsTable" class="pageTable">
       <thead>
         <tr class="pageTable">
@@ -49,135 +50,111 @@
 <hr>
 <!-------------------------------------------------------------------->
 <!-------------------------------------------------------------------->
-<table class="filtering">
-  <form>
+<table class="filterTable">
+  <form method="post" action="../filter/">
+    {% csrf_token %}
+    {% for field in fields %}
+      <input type="hidden" name="selectfields_{{ field }}" value="{{ field }}">
+    {% endfor %}
+    <thead>
+      <tr>
+        <th class="filterTable filterrow1">Field Name</th>
+        <th class="filterTable filterrow2" colspan="2">Field Filter Condition</th>
+      </tr>
+    </thead>
 
-    {% if fieldtype.range %}
-    <tr class="filtering">
-      <td class="filtering" id="rangeForm">
-        <table class="filterTable">
-          <thead>
-            <tr>
-              <th class="filterTable filterrow1">Field Name</th>
-              <th class="filterTable filterrow2" colspan="2">Field Filter Condition</th>
-            </tr>
-          </thead>
-          {% for field, datatype in fielddata.iteritems %}
-            {% if field == "id" %}
-              <tr class="filterTable">
-                <td class="filterTable">{{ field }}</td>
-                <td class="filterTable">
-                  <label for="{{ field }}_start">From:</label>
-                  <input type="number" id="{{ field }}_start">
-                </td>
-                <td class="filterTable">
-                  <label for="{{ field }}_end">To:</label>
-                  <input type="number" id="{{ field }}_end">
-                </td>
-            </tr>
-            {% endif %}
-          {% endfor %}
-          {% for field, datatype in fielddata.iteritems %}
-            {% if field != "id" %}
-              {% if datatype in "currency float" %}
-              <tr class="filterTable">
-                <td class="filterTable">{{ field }}</td>
-                <td class="filterTable">
-                  <label for="{{ field }}_start">From:</label>
-                  <input type="number" id="{{ field }}_start">
-                </td>
-                <td class="filterTable">
-                  <label for="{{ field }}_end">To:</label>
-                  <input type="number" id="{{ field }}_end">
-                </td>
-              </tr>
-              {% elif datatype in "date datetime" %}
-              <tr class="filterTable">
-                <td class="filterTable">{{ field }}</td>
-                <td class="filterTable">
-                  <label for="{{ field }}_start">From:</label>
-                  <input type="date" maxlength="10" id="{{ field }}_start">
-                </td>
-                <td class="filterTable">
-                  <label for="{{ field }}_end">To:</label>
-                  <input type="date" maxlength="10" id="{{ field }}_end">
-                </td>
-              </tr>
-              {% elif datatype == "integer" %}
-              <tr class="filterTable">
-                <td class="filterTable">{{ field }}</td>
-                <td class="filterTable">
-                  <label for="{{ field }}_start">From:</label>
-                  <input type="number" id="{{ field }}_start">
-                </td>
-                <td class="filterTable">
-                  <label for="{{ field }}_end">To:</label>
-                  <input type="number" id="{{ field }}_end">
-                </td>
-              </tr>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-        </table>
-      </td>
-    </tr>
-    {% endif %}
+  {% if fieldtype.range %}
+    {% for field, datatype in fielddata.iteritems %}
+      {% if field == "id" %}
+        <tr class="filterTable">
+          <td class="filterTable">{{ field }}</td>
+          <td class="filterTable">
+            <label for="id_start">From:</label>
+            <input type="number" name="id_start" id="id_start">
+          </td>
+          <td class="filterTable">
+            <label for="id_end">To:</label>
+            <input type="number" name="id_end" id="id_end">
+          </td>
+         </tr>
+      {% endif %}
+    {% endfor %}
+    {% for field, datatype in fielddata.iteritems %}
+      {% if field != "id" %}
+        {% if datatype in "currency float" %}
+          <tr class="filterTable">
+            <td class="filterTable">{{ field }}</td>
+            <td class="filterTable">
+              <label for="{{ field }}_start">From:</label>
+              <input type="number" name="{{ field }}_start" id="{{ field }}_start">
+            </td>
+            <td class="filterTable">
+              <label for="{{ field }}_end">To:</label>
+              <input type="number" name="{{ field }}_end" id="{{ field }}_end">
+            </td>
+          </tr>
+        {% elif datatype in "date datetime" %}
+          <tr class="filterTable">
+            <td class="filterTable">{{ field }}</td>
+            <td class="filterTable">
+              <label for="{{ field }}_start">From:</label>
+              <input type="date" maxlength="10" class="datepick" name="{{ field }}_start" id="{{ field }}_start">
+            </td>
+            <td class="filterTable">
+              <label for="{{ field }}_end">To:</label>
+              <input type="date" maxlength="10" name="{{ field }}_end" id="{{ field }}_end">
+            </td>
+          </tr>
+        {% elif datatype == "integer" %}
+          <tr class="filterTable">
+            <td class="filterTable">{{ field }}</td>
+            <td class="filterTable">
+              <label for="{{ field }}_start">From:</label>
+              <input type="number" name="{{ field }}_start" id="{{ field }}_start">
+            </td>
+            <td class="filterTable">
+              <label for="{{ field }}_end">To:</label>
+              <input type="number" name="{{ field }}_end" id="{{ field }}_end">
+            </td>
+          </tr>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
-    {% if fieldtype.string %}
-    <tr class="filtering">
-      <td id="stringForm">
-        <table class="filtering">
-          <thead>
-            <tr>
-              <th class="filterTable filterrow1">Field Name</th>
-              <th class="filterTable filterrow2">Field Filter Condition</th>
-            </tr>
-          </thead>
-          {% for field, datatype in fielddata.iteritems %}
-            {% if datatype in "string email phone text url" %}
-            <tr class="filterTable">
-              <td class="filterTable"><label for="{{ field }}_filter">{{ field }}</label></td>
-              <td class="filterTable"><input type="text" id="{{ field }}_filter"></td>
-            </tr>
-            {% endif %}
-          {% endfor %}
-        </table>
-      </td>
-    </tr>
-    {% endif %}
+  {% if fieldtype.string %}
+    {% for field, datatype in fielddata.iteritems %}
+      {% if datatype in "string email phone text url" %}
+        <tr class="filterTable">
+          <td class="filterTable"><label for="{{ field }}_filter">{{ field }}</label></td>
+          <td class="filterTable" colspan="2"><input type="text" name="{{ field }}_str" id="{{ field }}_filter"></td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
-    {% if fieldtype.boolean %}
-    <tr>
-      <td class="filtering" id="booleanForm">
-        <table class="filterTable">
-          <thead>
-            <tr>
-              <th class="filterTable filterrow1">Field Name</th>
-              <th class="filterTable filterrow2">Field Filter Condition</th>
-            </tr>
-          </thead>
-          {% for field, datatype in fielddata.iteritems %}
-            {% if datatype == "boolean" %}
-            <tr class="filterTable">
-              <td class="filterTable">
-                {{ field }}
-              </td>
-              <td class="filterTable">
-                <label for="{{ field }}_true">true</label>
-                <input type="checkbox" id="{{ field }}_true">
-                <label for="{{ field }}_false">false}</label>
-                <input type="checkbox" id="{{ field }}_false">
-              </td>
-            </tr>
-            {% endif %}
-          {% endfor %}
-        </table>
-      </td>
-    </tr>
-    {% endif %}
+  {% if fieldtype.boolean %}
+    {% for field, datatype in fielddata.iteritems %}
+      {% if datatype == "boolean" %}
+      <tr class="filterTable">
+        <td class="filterTable">
+          {{ field }}
+        </td>
+        <td class="filterTable" colspan="2">
+          <label for="{{ field }}_true">true</label>
+          <input type="radio" name="{{ field }}_boolean" value="true" id="{{ field }}_true">
+          <label for="{{ field }}_false">false</label>
+          <input type="radio" name="{{ field }}_boolean" value="false" id="{{ field }}_false">
+          <label for="{{ field }}_both">both</label>
+          <input type="radio" name="{{ field }}_boolean" value="both" id="{{ field }}_both" checked>
+        </td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 
-    <tr class="filtering">
-      <td class="filtering"><input type="submit" value="Generate Leads File"></td>
+    <tr class="filterButton">
+      <td class="filterButton" colspan="3"><input type="submit" value="Generate Leads File"></td>
     </tr>
 
   </form>

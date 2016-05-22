@@ -48,7 +48,7 @@ table.filterTable {
     border: 2px solid black;
     text-align: center;
     vertical-align: middle;
-    width: 100%;
+    width: 80%;
     table-layout: fixed;
 }
 
@@ -71,21 +71,18 @@ th.filterTable {
     text-align: center;
     vertical-align: middle;
     padding: 5px, 5px, 5px, 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid black;
 }
 
 td.filterTable {
     font-size: 0.95em;
-    text-align: left;
+    text-align: center;
     vertical-align: middle;
     padding: 5px, 5px, 5px, 5px;
-    border-bottom: 1px solid #000;
+    border-bottom: 2px solid black;
 }
 
-/*********************************************
-  CSS for the Filter Form Table
-**********************************************/
+tr.filterButton {
 
-table.filtering {
-    width: 100%;
 }
+
