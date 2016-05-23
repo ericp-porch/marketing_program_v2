@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Leads, Fields
 from .services import LeadClient
+from .tasks import get_leads
 
 
 class AboutView(TemplateView):
@@ -58,6 +59,9 @@ class CommandView(TemplateView):
         # f = open('static/leads.json', 'r')
         # read = f.read()
         # Leads.object.create_leads(json.loads(read).get('result'))
+
+        result = get_leads(request.user.client_id, request.user.client_secret, request.user.instance)
+        print result.ready()
 
         values = Leads.object.all()[:1].values('document')[0].get('document').keys()
         leads = Leads.object.all()[:100].values('document')
