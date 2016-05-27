@@ -51,7 +51,7 @@
 <!-------------------------------------------------------------------->
 <!-------------------------------------------------------------------->
 <table class="filterTable">
-  <form method="post" action="../filter/">
+  <form method="post" action="../filter/" name="filterForm" onsubmit="return minmax();">
     {% csrf_token %}
     {% for field in fields %}
       <input type="hidden" name="selectfields_{{ field }}" value="{{ field }}">
@@ -70,11 +70,11 @@
           <td class="filterTable">{{ field }}</td>
           <td class="filterTable">
             <label for="id_start">From:</label>
-            <input type="number" name="id_start" id="id_start">
+            <input type="number" name="id_start" id="id_start" class="numstart">
           </td>
           <td class="filterTable">
             <label for="id_end">To:</label>
-            <input type="number" name="id_end" id="id_end">
+            <input type="number" name="id_end" id="id_end" class="numend">
           </td>
          </tr>
       {% endif %}
@@ -86,11 +86,11 @@
             <td class="filterTable">{{ field }}</td>
             <td class="filterTable">
               <label for="{{ field }}_start">From:</label>
-              <input type="number" name="{{ field }}_start" id="{{ field }}_start">
+              <input type="number" name="{{ field }}_start" id="{{ field }}_start" class="numstart">
             </td>
             <td class="filterTable">
               <label for="{{ field }}_end">To:</label>
-              <input type="number" name="{{ field }}_end" id="{{ field }}_end">
+              <input type="number" name="{{ field }}_end" id="{{ field }}_end" class="numend">
             </td>
           </tr>
         {% elif datatype in "date datetime" %}
@@ -98,11 +98,11 @@
             <td class="filterTable">{{ field }}</td>
             <td class="filterTable">
               <label for="{{ field }}dstart">From:</label>
-              <input type="date" maxlength="10" class="datepick" name="{{ field }}dstart" id="{{ field }}dstart">
+              <input type="date" maxlength="10" class="datepick" name="{{ field }}dstart" id="{{ field }}dstart" class="numstart">
             </td>
             <td class="filterTable">
               <label for="{{ field }}dend">To:</label>
-              <input type="date" maxlength="10" name="{{ field }}dend" id="{{ field }}dend">
+              <input type="date" maxlength="10" name="{{ field }}dend" id="{{ field }}dend" class="numend">
             </td>
           </tr>
         {% elif datatype == "integer" %}
@@ -110,11 +110,11 @@
             <td class="filterTable">{{ field }}</td>
             <td class="filterTable">
               <label for="{{ field }}_start">From:</label>
-              <input type="number" name="{{ field }}_start" id="{{ field }}_start">
+              <input type="number" name="{{ field }}_start" id="{{ field }}_start" class="numstart">
             </td>
             <td class="filterTable">
               <label for="{{ field }}_end">To:</label>
-              <input type="number" name="{{ field }}_end" id="{{ field }}_end">
+              <input type="number" name="{{ field }}_end" id="{{ field }}_end" class="numend">
             </td>
           </tr>
         {% endif %}

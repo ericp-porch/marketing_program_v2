@@ -1,15 +1,20 @@
 // ***************************************** register.js functions *************************************
-    function goBack() {
-        window.history.back();
-    }
+//    function goBack() {
+//        window.history.back();
+//    }
+//
+//    function prettyJson(json) {
+//        return JSON.stringify(json)
+//    }
+//
+//    function prettyJson(json) {
+//        return JSON.stringify(json)
+//    }
+//
+//    function minmax(){
+//        alert(numrange);
+//    }
 
-    function prettyJson(json) {
-        return JSON.stringify(json)
-    }
-
-    function prettyJson(json) {
-        return JSON.stringify(json)
-    }
 
 
 // ************************** All other functions should be put in the $(document).ready(function()
@@ -98,6 +103,32 @@ $(document).ready(function(){
         $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
       };
       $(window).resize(footerResize).ready(footerResize);
+
+// ******************************************* Compare Ranges ***************************************************
+    function compare(filterForm){
+
+        var numrange = Array.prototype.slice.call(document.querySelectorAll('input.numstart, input.numend'));
+        var numlen = numrange.length;
+
+        for(var i = 0; i < numrange; i++) {
+            if (numrange[i][0] != "" && numrange[i][1] != ""){
+                if (numrange[i][0] > numrange[i][1]){
+                    $("form[filterForm]").submit(function(e){
+                        e.preventDefault();
+                        alert("UNACCEPTABLE RANGE");
+                        return false;
+                    })
+                }else{
+                return true;
+                }
+            }
+        }
+
+    }
+
+
+
+
 
 // **********************************************************************************************************
 
