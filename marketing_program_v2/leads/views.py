@@ -24,6 +24,7 @@ class LeadView(AboutView, ListView):
     model = Leads
 
     def post(self, request):
+        lead_num = Leads.objects.all().count() # Total number of leads in database
         fields = request.POST.getlist('selectfields') # 'fields' is a list of rest names, from the Field table, selected by the user on leads/leads.html
         queryset = Leads.objects.all().values('document')[:100] # 'leads' is the Leads table. Check the 'queryset' variable below to see if it is limited
         FieldsEntries = Fields.object.all() # Everything from the 'Fields' database
@@ -44,7 +45,8 @@ class LeadView(AboutView, ListView):
             else:
                 dummy += 1 # dummy --> Catches any instances where none of the the above datatypes are used (errors)
         fieldtype = {"string":string, "range":range, "boolean":boolean, "dummy":dummy} # 'fieldtype' Dictionary on what data types are included in 'fielddata'. The Official datatypes are condensed into 3 new types:
-        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'fielddata': fielddata, 'fieldtype': fieldtype})
+        return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'lead_num': lead_num,
+                                                   'fielddata': fielddata, 'fieldtype': fieldtype})
 
 
 class FilterView(LeadView, ListView):
@@ -160,7 +162,7 @@ class FilterView(LeadView, ListView):
         #     print exam.id, exam.email
 
         # 'leader' queries the values of the 'document' column in the Leads database
-        leader = Leads.objects.all().values('document').values()
+        leader = Leads.objects.all().values('document')
         counter = 0 # Goes up by 1 for each lead processed
         csvdict = {} # Dictionary eventually containg the data that will be converted to a CSV
         csvrow = {} # An entry for a single lead that will be added to csvdict

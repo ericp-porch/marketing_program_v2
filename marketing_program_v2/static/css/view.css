@@ -11,6 +11,10 @@ div.warning {
     color: lightblue;
 }
 
+.lead_num {
+    color: red;
+}
+
 /*********************************************
   CSS for the Lead Display Table
 **********************************************/

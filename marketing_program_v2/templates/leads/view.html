@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/datepicker.css' %}"/>
 
 <div style="overflow-x:auto;">
-  <h3>First 100 Leads in Database</h3>
+  <h3>First <span class="lead_num">100</span> of <span class="lead_num">{{ lead_num }}</span> Leads in Database</h3>
     <table id="leadsTable" class="pageTable">
       <thead>
         <tr class="pageTable">
@@ -154,7 +154,8 @@
   {% endif %}
 
     <tr class="filterButton">
-      <td class="filterButton" colspan="3"><input type="submit" value="Generate Leads File"></td>
+      <td class="filterSubmit" colspan="2"><input type="submit" value="Generate Leads File"></td>
+      <td class="filterReset" colspan="1"><input type="reset" value="Clear Form"></td>
     </tr>
 
   </form>
