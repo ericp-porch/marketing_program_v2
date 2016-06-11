@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Leads, Fields
 from .services import LeadClient
-from .tasks import get_leads
 
 
 class AboutView(TemplateView):
@@ -47,21 +46,18 @@ class CommandView(TemplateView):
             return render(request, "404.html")
 
         # LIVE VERSION
-        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-        # build1 = l.with_path('/rest/v1/leads/describe.json').build()
-        # Fields.object.create_fields(json.loads(build1).get('result'))
-        # for x in range(600, 10000, 100):
-        #     range1 = range(x, x + 101)
-        #     build = l.with_path('/rest/v1/leads.json').get_leads('Id', range1).build()
-        #     Leads.object.create_leads(json.loads(build).get('result'))
+        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        build1 = l.with_path('/rest/v1/leads/describe.json').build()
+        Fields.object.create_fields(json.loads(build1).get('result'))
+        for x in range(600, 10000, 100):
+            range_of_ids = range(x, x + 101)
+            json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids).build()
+            Leads.object.create_leads(json.loads(json_raw).get('result'))
 
         # FROM STATIC FILE
         # f = open('static/leads.json', 'r')
         # read = f.read()
         # Leads.object.create_leads(json.loads(read).get('result'))
-
-        result = get_leads(request.user.client_id, request.user.client_secret, request.user.instance)
-        print result.ready()
 
         values = Leads.object.all()[:1].values('document')[0].get('document').keys()
         leads = Leads.object.all()[:100].values('document')
