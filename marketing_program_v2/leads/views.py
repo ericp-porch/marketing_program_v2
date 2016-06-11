@@ -1,17 +1,17 @@
 from __future__ import absolute_import, unicode_literals
+
 import sys
 
 from marketing_program_v2.leads.services import LeadClient
 
-reload(sys)
-sys.setdefaultencoding('utf8')
 import csv
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.db import connection
 from django.views.generic import ListView, TemplateView
 from .models import Fields, Leads
 import json
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 class AboutView(ListView):
@@ -30,6 +30,12 @@ class LeadView(AboutView, ListView):
         if "get_leads" in request.POST:
             lead_num = Leads.object.all().count()  # Total number of leads in database
             fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
+            l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+            for x in range(0, 300, 100):
+                range_of_ids = range(x, x + 101)
+                json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids, fields=fields).build()
+                Leads.object.create_leads(json.loads(json_raw).get('result'))
+
             queryset = Leads.object.all().values('document')[:100]  # 'leads' is the Leads table.
             FieldsEntries = Fields.object.all()  # Everything from the 'Fields' database
             datatypes = []
@@ -38,18 +44,18 @@ class LeadView(AboutView, ListView):
                     if field == entry.rest_name:
                         datatypes.append(entry.data_type)
             fielddata = dict(zip(fields, datatypes))  # 'fieldata' is a dictionary with fields and associated data type
-            string, range, boolean, dummy = 0, 0, 0, 0
+            string, range1, boolean, dummy = 0, 0, 0, 0
             for field, datatype in fielddata.iteritems():
                 if datatype in "string email phone text url":
                     string += 1  # string--> string, email, phone, text, and url datatypes
                 elif datatype in "currency float date datetime integer":
-                    range += 1  # range--> currency, float, date, datetime, and integer datatypes
+                    range1 += 1  # range--> currency, float, date, datetime, and integer datatypes
                 elif datatype == "boolean":
                     boolean += 1  # boolean--> boolean datatype
                 else:
                     dummy += 1  # errors
             # 'fieldtype' Dictionary on what data types are included in 'fielddata'.
-            fieldtype = {"string": string, "range": range, "boolean": boolean, "dummy": dummy}
+            fieldtype = {"string": string, "range": range1, "boolean": boolean, "dummy": dummy}
             return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'lead_num': lead_num,
                                                        'fielddata': fielddata, 'fieldtype': fieldtype})
         elif "saveSubmit" in request.POST:
@@ -196,10 +202,10 @@ class CommandView(TemplateView):
         l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         build1 = l.with_path('/rest/v1/leads/describe.json').build()
         Fields.object.create_fields(json.loads(build1).get('result'))
-        for x in range(600, 10000, 100):
-            range_of_ids = range(x, x + 101)
-            json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids).build()
-            Leads.object.create_leads(json.loads(json_raw).get('result'))
+        # for x in range(600, 10000, 100):
+        #     range_of_ids = range(x, x + 101)
+        #     json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids).build()
+        #     Leads.object.create_leads(json.loads(json_raw).get('result'))
 
         # FROM STATIC FILE
         # f = open('static/leads.json', 'r')

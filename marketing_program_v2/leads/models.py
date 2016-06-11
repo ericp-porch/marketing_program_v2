@@ -54,15 +54,22 @@ class LeadsManager(models.Manager):
     def create_leads(self, leads):
         objs = []
         for lead in leads:
-            to_add = Leads(id=lead['id'], email=lead['email'], updated_at=lead['updatedAt'],
-                           created_at=lead['createdAt'],
-                           last_name=lead['lastName'], first_name=lead['firstName'], document=lead)
+            to_add = Leads(id=lead['id'],
+                           email=lead['email'] if 'email' in lead else None,
+                           updated_at=lead['updatedAt'] if 'updatedAt' in lead else None,
+                           created_at=lead['createdAt'] if 'createdAt' in lead else None,
+                           last_name=lead['lastName'] if 'lastName' in lead else None,
+                           first_name=lead['firstName'] if 'firstName' in lead else None,
+                           document=lead)
 
             existing_lead = self.filter(id=to_add.id)
             if existing_lead.exists():
-                existing_lead.update(email=lead['email'], updated_at=lead['updatedAt'],
-                                     created_at=lead['createdAt'],
-                                     last_name=lead['lastName'], first_name=lead['firstName'], document=lead)
+                existing_lead.update(email=lead['email'] if 'email' in lead else None,
+                                     updated_at=lead['updatedAt'] if 'updatedAt' in lead else None,
+                                     created_at=lead['createdAt'] if 'createdAt' in lead else None,
+                                     last_name=lead['lastName'] if 'lastName' in lead else None,
+                                     first_name=lead['firstName'] if 'firstName' in lead else None,
+                                     document=lead)
             else:
                 objs.append(to_add)
 
