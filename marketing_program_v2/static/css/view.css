@@ -1,20 +1,115 @@
-body {
-    background-color: lightblue;
-}
 
-select {
+
+select#fields {
     width: 100%;
-    background-color: lightgreen;
-    opacity: 0.0;
 }
 
-#warning {
-    text-align: center;
+div.warning {
+    text-align: left;
+    color: rgb(220,230,240);
+}
+
+.lead_num {
     color: red;
 }
 
-#printer {
+/*********************************************
+  CSS for leads.html
+**********************************************/
+
+.testTable {
 
 }
 
+#fieldTable {
+    display: inline;
+}
+
+#customTable {
+    display: inline;
+    float: right;
+}
+
+#custom_names {
+    width: 150px;
+    height: 200px;
+}
+
+
+/*********************************************
+  CSS for the Lead Display Table
+**********************************************/
+
+table.pageTable {
+    border-collapse: collapse;
+}
+
+th.pageTable {
+    background-color: darkblue;
+    color: white;
+}
+
+td.pageTable {
+    font-size: 0.75em;
+}
+
+th.pageTable, td.pageTable {
+    padding: 0px, 10px;
+    border: 2px solid black;
+}
+
+table.pageTable, th.pageTable, td.pageTable {
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+/*********************************************
+  CSS for the Filter Form Table
+**********************************************/
+
+table.filterTable {
+    border-collapse: collapse;
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+    width: 80%;
+    table-layout: fixed;
+}
+
+tr.filterTable {
+    width: 100%;
+}
+
+th.filterrow1 {
+  width: 20%;
+}
+
+th.filterrow2 {
+  width: 80%;
+}
+
+th.filterTable {
+    background-color: darkblue;
+    color: white;
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px, 5px, 5px, 5px;
+    border-bottom: 2px solid black;
+}
+
+td.filterTable {
+    font-size: 0.95em;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px, 5px, 5px, 5px;
+    border-bottom: 2px solid black;
+}
+
+tr.filterButton {
+
+}
 

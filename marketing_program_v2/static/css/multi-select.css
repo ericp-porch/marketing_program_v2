@@ -1,17 +1,16 @@
 
 
 .ms-container{
-/*  background: transparent url('../img/switch.png') no-repeat 50% 50%; */
-  width: 700px;
+  width: 100%;
 }
 
 .ms-container:after{
   content: ".";
-  display: block;
+  display: inline;
   height: 0;
   line-height: 0;
   font-size: 0;
-  clear: both;
+  clear: none;
   min-height: 0;
   visibility: hidden;
 }
@@ -22,8 +21,14 @@
   float: left;
   width: 30%;
 }
+
 .ms-container .ms-selection{
-  float: right;
+  float: left;
+}
+
+.ms-selectable {
+  margin-right: 50px;
+  margin-left: 50px;
 }
 
 .ms-container .ms-list{
@@ -95,5 +100,8 @@
 }
 
 .search-input {
-    width: 90%;
+    width: 100%;
+
 }
+
+

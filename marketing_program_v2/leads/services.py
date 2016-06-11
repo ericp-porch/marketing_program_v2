@@ -67,8 +67,8 @@ class LeadClient(BaseClient):
         self.path = self.path.format(id=lead_id)
         return self
 
-    def get_leads(self, filter_type, ids, fields=''):
-        d = dict(filterValues=','.join(str(x) for x in ids))
+    def get_leads(self, filter_type, filter_values, fields=''):
+        d = dict(filterValues=','.join(str(x) for x in filter_values))
         d['filterType'] = filter_type
         d['fields'] = ','.join(field for field in fields)
         self.param = d

@@ -1,15 +1,20 @@
 // ***************************************** register.js functions *************************************
-    function goBack() {
-        window.history.back();
-    }
+//    function goBack() {
+//        window.history.back();
+//    }
+//
+//    function prettyJson(json) {
+//        return JSON.stringify(json)
+//    }
+//
+//    function prettyJson(json) {
+//        return JSON.stringify(json)
+//    }
+//
+//    function minmax(){
+//        alert(numrange);
+//    }
 
-    function prettyJson(json) {
-        return JSON.stringify(json)
-    }
-
-    function prettyJson(json) {
-        return JSON.stringify(json)
-    }
 
 
 // ************************** All other functions should be put in the $(document).ready(function()
@@ -20,28 +25,22 @@ $(document).ready(function(){
 // ***********************************Limit amount of selected fields**********************************
 
     $('#fields').change(function(){
-        if($('#fields option:selected').length >= 4){
+        if($('#fields option:selected').length >= 20){
             $('.ms-elem-selectable').prop('disabled', true);
-            $("#warning").css("opacity") = "0.0";
+            $('div.warning').css('color','red');
 
         } else {
             $('.ms-elem-selectable').prop('disabled', false);
-            $('#warning').css("opacity") = "1.0";
         }
     })
 
-// ***********************************Return Selected Values**********************************
-    $("form").submit(function(){
-        myList = [];
-        $('#fields option:selected').each(function() {
-            myList.push($(this).val())
-        });
-        var data = myList
-        var table = arrayToTable(data, {
-                thead: false,
-                attrs: {class: 'table'}
-            })
-        $('#printer').html(table);
+// *********************************** Prevent Zero Fields from Being Submitted **********************************
+
+    $("form[name='fieldselect']").submit(function(stop){
+        if($('#fields option:selected').length == 0){
+            alert('Please Select at Least One Field.');
+            stop.preventDefault(stop);
+        }
     })
 
 // *******************************Search and Filter Fields****************************************
@@ -83,7 +82,78 @@ $(document).ready(function(){
 
     });
 
-// *********************************  ************************************
+// ********************************************* Table Pagination *******************************************
+
+    $("#leadsTable").simplePagination({
+        perPage: 10
+    });
+
+// ************************************* Detect is Browser Uses Input_Type:date ************************************
+
+    if (!Modernizr.inputtypes.date) {
+    $('input[type=date]').datepicker({
+        // Consistent format with the HTML5 picker
+        dateFormat: 'yy-mm-dd'
+    });
+}
+
+// ************************************* Custom Fields Option Select ************************************
+
+    $('#deselect_all').click(function(){
+        $('#fields').multiSelect('deselect_all');
+        return false;
+    });
+
+    $('#custom_default').click(function(){
+        $('#fields').multiSelect('select', ['id', 'email', 'updatedAt', 'createdAt', 'firstName', 'lastName']);
+        return false;
+    });
+
+
+// ************************************* Footer Fixed to Bottom of Viewport ************************************
+
+//    var footerResize = function() {
+//        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
+//      };
+//      $(window).resize(footerResize).ready(footerResize);
+
+// ******************************************* Compare Ranges ***************************************************
+//    function compare(){
+//
+//        var numrange = Array.prototype.slice.call(document.querySelectorAll('.numstart, .numend'));
+//        var numlen = numrange.length;
+//        console.log("cpmpare")
+//
+//        for(var i = 0; i < numrange; i++) {
+//            console.log("for")
+//            if (numrange[i][0] != "" && numrange[i][1] != ""){
+//                console.log("2nd")
+//                if (numrange[i][0] > numrange[i][1]){
+//                    console.log("3rd")
+//                    $("form[filterForm]").submit(function(e){
+//                        e.preventDefault();
+//                        console.log("Invalid Data")
+//                        return false;
+//                    })
+//                }else{
+//                console.log("Valid Data")
+//                return true;
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    $('#filterForm').on('submit', function(event){
+////        event.preventDefault();
+//        console.log("form submitted")
+//        compare();
+//    });
+
+
+
+
+// **********************************************************************************************************
 
 });
 
