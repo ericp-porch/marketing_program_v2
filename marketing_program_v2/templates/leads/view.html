@@ -51,7 +51,7 @@
 <!-------------------------------------------------------------------->
 <!-------------------------------------------------------------------->
 <table class="filterTable">
-  <form method="post" action="../filter/" name="filterForm" onsubmit="return minmax();">
+  <form method="post" action="../filter/" name="filterForm" id="filterForm">
     {% csrf_token %}
     {% for field in fields %}
       <input type="hidden" name="selectfields_{{ field }}" value="{{ field }}">

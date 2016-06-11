@@ -97,35 +97,58 @@ $(document).ready(function(){
     });
 }
 
+// ************************************* Custom Fields Option Select ************************************
+
+    $('#deselect_all').click(function(){
+        $('#fields').multiSelect('deselect_all');
+        return false;
+    });
+
+    $('#custom_default').click(function(){
+        $('#fields').multiSelect('select', ['id', 'email', 'updatedAt', 'createdAt', 'firstName', 'lastName']);
+        return false;
+    });
+
+
 // ************************************* Footer Fixed to Bottom of Viewport ************************************
 
-    var footerResize = function() {
-        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
-      };
-      $(window).resize(footerResize).ready(footerResize);
+//    var footerResize = function() {
+//        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
+//      };
+//      $(window).resize(footerResize).ready(footerResize);
 
 // ******************************************* Compare Ranges ***************************************************
-    function compare(filterForm){
-
-        var numrange = Array.prototype.slice.call(document.querySelectorAll('input.numstart, input.numend'));
-        var numlen = numrange.length;
-
-        for(var i = 0; i < numrange; i++) {
-            if (numrange[i][0] != "" && numrange[i][1] != ""){
-                if (numrange[i][0] > numrange[i][1]){
-                    $("form[filterForm]").submit(function(e){
-                        e.preventDefault();
-                        alert("UNACCEPTABLE RANGE");
-                        return false;
-                    })
-                }else{
-                return true;
-                }
-            }
-        }
-
-    }
-
+//    function compare(){
+//
+//        var numrange = Array.prototype.slice.call(document.querySelectorAll('.numstart, .numend'));
+//        var numlen = numrange.length;
+//        console.log("cpmpare")
+//
+//        for(var i = 0; i < numrange; i++) {
+//            console.log("for")
+//            if (numrange[i][0] != "" && numrange[i][1] != ""){
+//                console.log("2nd")
+//                if (numrange[i][0] > numrange[i][1]){
+//                    console.log("3rd")
+//                    $("form[filterForm]").submit(function(e){
+//                        e.preventDefault();
+//                        console.log("Invalid Data")
+//                        return false;
+//                    })
+//                }else{
+//                console.log("Valid Data")
+//                return true;
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    $('#filterForm').on('submit', function(event){
+////        event.preventDefault();
+//        console.log("form submitted")
+//        compare();
+//    });
 
 
 

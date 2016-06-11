@@ -39,6 +39,7 @@
 
 body {
     margin-bottom: 0px;
+    background-color: rgb(220,230,240);
 }
 
 div.navbar.navbar-default.navbar-fixed-bottom {

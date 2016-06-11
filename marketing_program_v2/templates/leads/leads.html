@@ -5,31 +5,66 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'css/multi-select.css' %}"/>
 
-<div class="warning">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
+<div class="row">
+  <div class="warning col-md-8">YOU CAN SELECT NO MORE THAN 20 FIELDS</div>
+  <div class="col-md-4"><h4>Custom Field Selections</h4></div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-7">
+      <form action="view/" method="post" name="fieldselect">
+        {% csrf_token %}
+          <select multiple="multiple", name="selectfields" id="fields">
+            {% for field in fields %}
+              {% if field.rest_name == 'id' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% elif field.rest_name == 'email' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% elif field.rest_name == 'updatedAt' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% elif field.rest_name == 'createdAt' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% elif field.rest_name == 'firstName' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% elif field.rest_name == 'lastName' %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+              {% else %}
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}"> {{ field.display_name }} </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-2">
+              <input type="submit" class="btn btn-success btn-md" id="get_leads" name="get_leads" value="Get Leads">
+            </div>
+            <div class="col-md-6">
+              <input type="button" class="btn btn-warning btn-sm" id="deselect_all" value="Deselect All">
+            </div>
+            <!--<div class="col-md-3"></div>-->
+          </div>
+        </form>
+    </div>
 
-<form action="view/" method="post" name="fieldselect">
-    {% csrf_token %}
-    <select multiple="multiple", name="selectfields" id="fields">
-    {% for field in fields %}
-      {% if field.rest_name == 'id' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% elif field.rest_name == 'email' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% elif field.rest_name == 'updatedAt' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% elif field.rest_name == 'createdAt' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% elif field.rest_name == 'firstName' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% elif field.rest_name == 'lastName' %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
-      {% else %}
-        <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}"> {{ field.display_name }} </option>
-      {% endif %}
-    {% endfor %}
-    </select>
 
-    <input type="submit", id="get_leads" value="Get Leads">
-</form>
+  <div class="col-md-3">
+    Name of Field Set<br>
+      <input type="text" name="customfields_name" id="customfieldsName"><br>
+      <input type="button" class="btn btn-primary btn-sm" name="save_fields" value="Save Fields">
+  </div>
+    <div class="col-md-2">
+        <select multiple="multiple" id="custom_names">
+          <option id="custom_default" selected>Default</option>
+          <option>Option 1</option>
+          <option>Option 2</option>
+          <option>Option 3</option>
+        </select>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 {% endblock %}

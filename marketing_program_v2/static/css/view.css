@@ -1,6 +1,4 @@
-body {
-    background-color: lightblue;
-}
+
 
 select#fields {
     width: 100%;
@@ -8,12 +6,35 @@ select#fields {
 
 div.warning {
     text-align: left;
-    color: lightblue;
+    color: rgb(220,230,240);
 }
 
 .lead_num {
     color: red;
 }
+
+/*********************************************
+  CSS for leads.html
+**********************************************/
+
+.testTable {
+
+}
+
+#fieldTable {
+    display: inline;
+}
+
+#customTable {
+    display: inline;
+    float: right;
+}
+
+#custom_names {
+    width: 150px;
+    height: 200px;
+}
+
 
 /*********************************************
   CSS for the Lead Display Table
@@ -42,6 +63,8 @@ table.pageTable, th.pageTable, td.pageTable {
     text-align: center;
     vertical-align: middle;
 }
+
+
 
 /*********************************************
   CSS for the Filter Form Table
