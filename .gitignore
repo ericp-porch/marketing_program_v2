@@ -76,3 +76,5 @@ tests/.hitch
 
 # MailHog binary
 mailhog
+config/settings/
+static/

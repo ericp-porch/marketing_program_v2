@@ -1,13 +1,17 @@
 from __future__ import absolute_import, unicode_literals
 import sys
+
+from marketing_program_v2.leads.services import LeadClient
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 import csv
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connection
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from .models import Fields, Leads
+import json
 
 
 class AboutView(ListView):
@@ -24,28 +28,28 @@ class LeadView(AboutView, ListView):
 
     def post(self, request):
         if "get_leads" in request.POST:
-            lead_num = Leads.objects.all().count() # Total number of leads in database
-            fields = request.POST.getlist('selectfields') # 'fields' is a list of user-selected rest names
-            queryset = Leads.objects.all().values('document')[:100] # 'leads' is the Leads table.
-            FieldsEntries = Fields.object.all() # Everything from the 'Fields' database
+            lead_num = Leads.object.all().count()  # Total number of leads in database
+            fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
+            queryset = Leads.object.all().values('document')[:100]  # 'leads' is the Leads table.
+            FieldsEntries = Fields.object.all()  # Everything from the 'Fields' database
             datatypes = []
             for field in fields:
                 for entry in FieldsEntries:
                     if field == entry.rest_name:
                         datatypes.append(entry.data_type)
-            fielddata = dict(zip(fields, datatypes)) # 'fieldata' is a dictionary with fields and associated data type
-            string, range, boolean, dummy = 0,0,0,0
+            fielddata = dict(zip(fields, datatypes))  # 'fieldata' is a dictionary with fields and associated data type
+            string, range, boolean, dummy = 0, 0, 0, 0
             for field, datatype in fielddata.iteritems():
                 if datatype in "string email phone text url":
-                    string += 1 # string--> string, email, phone, text, and url datatypes
+                    string += 1  # string--> string, email, phone, text, and url datatypes
                 elif datatype in "currency float date datetime integer":
-                    range += 1 # range--> currency, float, date, datetime, and integer datatypes
+                    range += 1  # range--> currency, float, date, datetime, and integer datatypes
                 elif datatype == "boolean":
-                    boolean += 1 # boolean--> boolean datatype
+                    boolean += 1  # boolean--> boolean datatype
                 else:
-                    dummy += 1 # errors
+                    dummy += 1  # errors
             # 'fieldtype' Dictionary on what data types are included in 'fielddata'.
-            fieldtype = {"string":string, "range":range, "boolean":boolean, "dummy":dummy}
+            fieldtype = {"string": string, "range": range, "boolean": boolean, "dummy": dummy}
             return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'lead_num': lead_num,
                                                        'fielddata': fielddata, 'fieldtype': fieldtype})
         elif "saveSubmit" in request.POST:
@@ -57,7 +61,7 @@ class FilterView(LeadView, ListView):
     template_name = "leads/filter.html"
     context_object_name = "leads"
     model = Leads
-    queryset = Leads.objects.all().values('document')
+    queryset = Leads.object.all().values('document')
 
     def user_filters(self, request):
         fields = []
@@ -112,9 +116,9 @@ class FilterView(LeadView, ListView):
                             if filterkey == dockey:  # Match keys between 'filters' and 'document'
                                 if filterval[0] == 0:  # range variables
                                     if (filterval[1] <= docval <= filterval[2]) or (
-                                            filterval[1] == filterval[2] == "") or (
-                                            filterval[1] <= docval and filterval[2] == "") or (
-                                            filterval[1] == "" and filterval[2] >= docval):
+                                                filterval[1] == filterval[2] == "") or (
+                                                filterval[1] <= docval and filterval[2] == "") or (
+                                                filterval[1] == "" and filterval[2] >= docval):
                                         csvrow.update({dockey: docval})
                                     else:  # if out of range, clear csvrow and kill loop
                                         csvrow.clear()
@@ -123,18 +127,21 @@ class FilterView(LeadView, ListView):
                                     if filterval[1] in docval:
                                         csvrow.update({dockey: docval})
                                     else:  # if string does not match, clear csvrow and kill loop
-                                        csvrow.clear(); return counter, csvrow, csvdict
+                                        csvrow.clear();
+                                        return counter, csvrow, csvdict
                                 elif filterval[0] == 2:
                                     if filterval[1] == docval or filterval[1] in "both":
                                         csvrow.update({dockey: docval})
                                     else:  # if wrong boolean value, clear csvrow and kill loop
-                                        csvrow.clear(); return counter, csvrow, csvdict
+                                        csvrow.clear();
+                                        return counter, csvrow, csvdict
                                 else:  # For testing purposes only
                                     print counter, "INDEX ERROR"
                                     csvrow.clear()
                     else:
-                        csvrow.clear(); return counter, csvrow, csvdict # if 'document' value is null
-        for key, value in csvdict.iteritems(): #If lead not filtered out, csvrow is added to csvdict
+                        csvrow.clear();
+                        return counter, csvrow, csvdict  # if 'document' value is null
+        for key, value in csvdict.iteritems():  # If lead not filtered out, csvrow is added to csvdict
             for rowkey, rowval in csvrow.iteritems():
                 if key == rowkey:
                     value.append(rowval)
@@ -154,24 +161,24 @@ class FilterView(LeadView, ListView):
         # key = rest name
         # value = list[ datatype, filter_value or min_value, max_value in the case of range variable]
 
-        idstr = "Select id, document FROM Leads WHERE (Cast(document->> 'id' AS integer) BETWEEN 500 AND 800)"
-        emailstr = "AND (document->> 'email' LIKE '%@gmail.com')"
-        final = idstr + emailstr
-        example = Leads.objects.raw(final)
-        for exam in example:
-            print exam.id, exam.email
+        # idstr = "Select id, document FROM Leads WHERE (Cast(document->> 'id' AS integer) BETWEEN 500 AND 800)"
+        # emailstr = "AND (document->> 'email' LIKE '%@gmail.com')"
+        # final = idstr + emailstr
+        # example = Leads.object.raw(final)
+        # for exam in example:
+        #     print exam.id, exam.email
 
         # 'leader' queries the values of the 'document' column in the Leads database
-        leader = Leads.objects.all().values('document')
-        counter = 0 # Goes up by 1 for each lead processed
-        csvdict = {} # Dictionary eventually containg the data that will be converted to a CSV
-        csvrow = {} # An entry for a single lead that will be added to csvdict
+        leader = Leads.object.all().values('document')
+        counter = 0  # Goes up by 1 for each lead processed
+        csvdict = {}  # Dictionary eventually containg the data that will be converted to a CSV
+        csvrow = {}  # An entry for a single lead that will be added to csvdict
         for filterkey, filterval in filters.iteritems():
-            csvdict.update({filterkey: []}) # filterkeys become headers for CSV
+            csvdict.update({filterkey: []})  # filterkeys become headers for CSV
 
         # Iterate through leads and filter
         for lead in leader:
-            csvrow.clear() # resets csvrow, so new lead data can be added
+            csvrow.clear()  # resets csvrow, so new lead data can be added
             counter, csvrow, csvdict = self.filter_leads(lead, filters, counter, csvrow, csvdict)
 
         # csvdict is used to generate a CSV
@@ -180,3 +187,31 @@ class FilterView(LeadView, ListView):
         return response
 
 
+class CommandView(TemplateView):
+    def post(self, request):
+        if not request.user.is_authenticated():
+            return render(request, "404.html")
+
+        # LIVE VERSION
+        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        build1 = l.with_path('/rest/v1/leads/describe.json').build()
+        Fields.object.create_fields(json.loads(build1).get('result'))
+        for x in range(600, 10000, 100):
+            range_of_ids = range(x, x + 101)
+            json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids).build()
+            Leads.object.create_leads(json.loads(json_raw).get('result'))
+
+        # FROM STATIC FILE
+        # f = open('static/leads.json', 'r')
+        # read = f.read()
+        # Leads.object.create_leads(json.loads(read).get('result'))
+
+        values = Leads.object.all()[:1].values('document')[0].get('document').keys()
+        leads = Leads.object.all()[:100].values('document')
+
+        return render(request, "leads/command.html", context={'leads': leads, 'values': values})
+
+    def get(self, request):
+        if not request.user.is_authenticated():
+            return render(request, "404.html")
+        return render(request, "leads/command.html")
