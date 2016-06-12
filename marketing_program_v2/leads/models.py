@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.postgres.fields import JSONField
-from django.db import models
+from django.db import models, connection
 
 
 class FieldsManager(models.Manager):
@@ -52,28 +52,23 @@ class Fields(models.Model):
 
 class LeadsManager(models.Manager):
     def create_leads(self, leads):
-        objs = []
+        cursor = connection.cursor()
         for lead in leads:
-            to_add = Leads(id=lead['id'],
-                           email=lead['email'] if 'email' in lead else None,
-                           updated_at=lead['updatedAt'] if 'updatedAt' in lead else None,
-                           created_at=lead['createdAt'] if 'createdAt' in lead else None,
-                           last_name=lead['lastName'] if 'lastName' in lead else None,
-                           first_name=lead['firstName'] if 'firstName' in lead else None,
-                           document=lead)
-
-            existing_lead = self.filter(id=to_add.id)
-            if existing_lead.exists():
-                existing_lead.update(email=lead['email'] if 'email' in lead else None,
-                                     updated_at=lead['updatedAt'] if 'updatedAt' in lead else None,
-                                     created_at=lead['createdAt'] if 'createdAt' in lead else None,
-                                     last_name=lead['lastName'] if 'lastName' in lead else None,
-                                     first_name=lead['firstName'] if 'firstName' in lead else None,
-                                     document=lead)
+            default_keys = {'email': 'email', 'updatedAt': 'updated_at', 'createdAt': 'created_at',
+                            'firstName': 'first_name', 'lastName': 'last_name'}
+            default_values = {}
+            for key, value in lead.iteritems():
+                if key in default_keys:
+                    default_values[default_keys[key]] = value
+            obj, created = Leads.object.update_or_create(id=lead['id'], defaults=default_values)
+            if created:
+                print 'created new'
             else:
-                objs.append(to_add)
-
-        self.bulk_create(objs)
+                for key, value in lead.iteritems():
+                    print key, value
+                    cursor.execute(
+                        '''UPDATE leads SET document = jsonb_set(document, '{{{0}}}', '"{1}"') WHERE id = {2}'''.format(
+                            key, value, obj.id))
 
 
 class Leads(models.Model):
