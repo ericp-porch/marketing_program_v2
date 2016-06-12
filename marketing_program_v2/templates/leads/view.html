@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 {% load staticfiles i18n %}
+{% load rangelist %}
+{% load dict_list_index %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/view.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'css/datepicker.css' %}"/>
 
 <div style="overflow-x:auto;">
-  <h3>First <span class="lead_num">100</span> of <span class="lead_num">{{ lead_num }}</span> Leads in Database</h3>
+    <h3>First <span class="lead_num">100</span> of <span class="lead_num">{{ lead_num }}</span> Leads in Database</h3>
+  <div class="pageTable-Leads wrapper">
     <table id="leadsTable" class="pageTable">
       <thead>
         <tr class="pageTable">
-          {% for field, datatype in fielddata.iteritems %}
-            {% if field == "id" %}
-              <th class="pageTable">{{ field }}</th>
-            {% endif %}
-          {% endfor %}
-          {% for field, datatype in fielddata.iteritems %}
+              <th class="pageTable">id</th>
+          {% for field in tablelist %}
             {% if field != "id" %}
               <th class="pageTable">{{ field }}</th>
             {% endif %}
@@ -22,31 +21,19 @@
         </tr>
       </thead>
       <tbody>
-        {% for lead in leads %}
+      {% num_range 100 as some_range %}
+        {% for i in some_range %}
           <tr class="pageTable">
-            {% for field, datatype in fielddata.iteritems %}
-              {% if field == "id" %}
-                {% for key, value in lead.document.items %}
-                  {% if field == key %}
-                      <td class="pageTable"">{{ value }}</td>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-            {% for field, datatype in fielddata.iteritems %}
-              {% if field != "id" %}
-                {% for key, value in lead.document.items %}
-                  {% if field == key %}
-                      <td class="pageTable"">{{ value }}</td>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
+            {% for field in tablelist %}
+              {% dict_list_index tabledict field i as entry %}
+              <td class="pageTable">{{ entry }}</td>
             {% endfor %}
           </tr>
         {% endfor %}
       </tbody>
     </table>
 
+  </div>
 <hr>
 <!-------------------------------------------------------------------->
 <!-------------------------------------------------------------------->

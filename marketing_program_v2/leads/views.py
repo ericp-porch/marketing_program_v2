@@ -31,10 +31,11 @@ class LeadView(AboutView, ListView):
             lead_num = Leads.object.all().count()  # Total number of leads in database
             fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
             l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-            for x in range(0, 300, 100):
-                range_of_ids = range(x, x + 101)
-                json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids, fields=fields).build()
-                Leads.object.create_leads(json.loads(json_raw).get('result'))
+
+            # for x in range(0, 300, 100):
+            #     range_of_ids = range(x, x + 101)
+            #     json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids, fields=fields).build()
+            #     Leads.object.create_leads(json.loads(json_raw).get('result'))
 
             queryset = Leads.object.all().values('document')[:100]  # 'leads' is the Leads table.
             FieldsEntries = Fields.object.all()  # Everything from the 'Fields' database
@@ -56,8 +57,26 @@ class LeadView(AboutView, ListView):
                     dummy += 1  # errors
             # 'fieldtype' Dictionary on what data types are included in 'fielddata'.
             fieldtype = {"string": string, "range": range1, "boolean": boolean, "dummy": dummy}
+            tabledict = {'id': []}
+            tablelist = ['id']
+            for field, datatype in fielddata.iteritems():
+                if field != "id":
+                    tablelist.append(field)
+                    tabledict.update({field:[]})
+            for header in tablelist:
+                for lead in queryset:
+                    for json, document in lead.iteritems():
+                        if header in document:
+                            tabledict[header].append(document[header])
+                        else: tabledict[header].append("---")
+                        # for key, val in document.iteritems():
+                        #     if key == header:
+                        #         tabledict[header].append(val)
+            print tabledict
+
             return render(request, "leads/view.html", {'leads': queryset, 'fields': fields, 'lead_num': lead_num,
-                                                       'fielddata': fielddata, 'fieldtype': fieldtype})
+                                                       'fielddata': fielddata, 'fieldtype': fieldtype,
+                                                       'tablelist': tablelist, 'tabledict': tabledict})
         elif "saveSubmit" in request.POST:
             template_name = "leads/leads.html"
             return render(request, "leads/leads.html")
@@ -167,12 +186,6 @@ class FilterView(LeadView, ListView):
         # key = rest name
         # value = list[ datatype, filter_value or min_value, max_value in the case of range variable]
 
-        # idstr = "Select id, document FROM Leads WHERE (Cast(document->> 'id' AS integer) BETWEEN 500 AND 800)"
-        # emailstr = "AND (document->> 'email' LIKE '%@gmail.com')"
-        # final = idstr + emailstr
-        # example = Leads.object.raw(final)
-        # for exam in example:
-        #     print exam.id, exam.email
 
         # 'leader' queries the values of the 'document' column in the Leads database
         leader = Leads.object.all().values('document')

@@ -13,6 +13,7 @@ div.warning {
     color: red;
 }
 
+
 /*********************************************
   CSS for leads.html
 **********************************************/
@@ -39,6 +40,11 @@ div.warning {
 /*********************************************
   CSS for the Lead Display Table
 **********************************************/
+
+.pageTable-Leads {
+    overflow-x: scroll;
+    border: 2px solid black;
+}
 
 table.pageTable {
     border-collapse: collapse;
