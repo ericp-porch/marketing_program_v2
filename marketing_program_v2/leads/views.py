@@ -74,12 +74,10 @@ class LeadView(AboutView, ListView):
             for lead in queryset:
                 for json, document in lead.iteritems():
                     if header in document:
+                        print document[header]
                         tabledict[header].append(document[header])
                     else:
                         tabledict[header].append("---")
-                    for key, val in document.iteritems():
-                        if key == header:
-                            tabledict[header].append(val)
         return tabledict, tablelist
 
     def post(self, request):
@@ -112,190 +110,99 @@ class FilterView(LeadView, ListView):
             idend = request.POST['id_end']
         else:
             idend = int(request.POST['id_end'])
-        # This 'filters' dictionary will eventually contain the user-submitted filter values for the user-selected fields.
-        # We now what goes with the 'id' key already.
-        # The first number in the value list is an integer that marks the associated field's datatype:
-        #   0 = range: These have min and max values
-        #   1 = string:
-        #   2 = boolean: A string reading "true", "false", or "both"
-        filters = {'id': [0, idstart, idend]}  # The creation of the 'filters' dictionary
+
+        filters = {'id': [idstart, idend]}  # The creation of the 'filters' dictionary
         for key, value in request.POST.items():
             if 'selectfields' in key:  # Rest Names taken from hiiden input fields
                 fields.append(value)
             elif '_start' in key and 'id' not in key:  # non-date ranges are converted to floats
                 a = key[:-6]  # "start" is removed form the rest name, then value is made into key for 'filters' entry
                 b = float(value)  # start value converted from string to float
-                d = 0  # value is datatype variable index. A value of 0 indicates a range variable
                 for key2, value2 in request.POST.items():
                     if a + '_end' in key2:
                         c = float(value2)  # The 'end' or max value is converted to float to be added to 'filters'
-                filters.update({a: [d, b, c]})  # non-date and non-id range is added to 'filters'
+                filters.update({a: [b, c]})  # non-date and non-id range is added to 'filters'
             elif 'dstart' in key and 'id' not in key:  # date and datetime variables are NOT converted to floats
                 a = key[:-6]
                 b = value
-                d = 0  # value is datatype variable index. A value of 0 indicates a range variable
                 for key2, value2 in request.POST.items():
                     if a + 'dend' in key2:
                         c = value2
-                filters.update({a: [d, b, c]})  # date type is added to 'filters'
+                filters.update({a: [b, c]})  # date type is added to 'filters'
             elif '_str' in key:
-                filters.update({key[:-4]: [1, value]})  # the index value of "1" indicates a string variable
+                filters.update({key[:-4]: value})
             elif '_boolean' in key:
-                filters.update({key[:-8]: [2, value]})  # the index value of 2 "indicates a boolean variable
+                filters.update({key[:-8]: value})
         return filters, fields
 
-    def filter_out(self, fields, dockey):
-        for field in fields:
-            if dockey == field:
-                filterout = 0
-            else:
-                filterout = 1
-                return filterout
-        return filterout
-
-    def filter_leads(self,leader, filters, counter, csvrow, csvdict, fields):
-        for lead in leader:
-            csvrow.clear()
-            for key, value in lead.iteritems():
-                if key == 'document':  # The 'document' JSON is accessed here
-                    counter += 1
-                    for dockey, docval in value.iteritems():  # Here is where the bulk of the filtering occurs
-                        filterout = self.filter_out(fields, dockey)
-                        if filterout == 1:
-                            csvrow.clear()
-                            return counter, csvrow, csvdict
-                        else:
-                            print counter, dockey, docval
-                            if docval:  # Leads with null values are filtered out
-                                for filterkey, filterval in filters.iteritems():
-                                    if filterkey == dockey:  # Match keys between 'filters' and 'document'
-                                        if filterval[0] == 0:  # range variables
-                                            if (filterval[1] <= docval <= filterval[2]) or (
-                                                filterval[1] == filterval[2] == "") or (
-                                                filterval[1] <= docval and filterval[2] == "") or (
-                                                filterval[1] == "" and filterval[2] >= docval):
-                                                csvrow.update({dockey: docval})
-                                            else:  # if out of range, clear csvrow and kill loop
-                                                csvrow.clear()
-                                                return counter, csvrow, csvdict
-                                        elif filterval[0] == 1:  # string variables
-                                            if filterval[1] in docval:
-                                                csvrow.update({dockey: docval})
-                                            else:  # if string does not match, clear csvrow and kill loop
-                                                csvrow.clear();
-                                                return counter, csvrow, csvdict
-                                        elif filterval[0] == 2:
-                                            if filterval[1] == docval or filterval[1] in "both":
-                                                csvrow.update({dockey: docval})
-                                            else:  # if wrong boolean value, clear csvrow and kill loop
-                                                csvrow.clear();
-                                                return counter, csvrow, csvdict
-                                        else:  # For testing purposes only
-                                            print counter, "INDEX ERROR"
-                                            csvrow.clear()
-                            else:
-                                csvrow.clear();
-                                return counter, csvrow, csvdict  # if 'document' value is null
-        for key, value in csvdict.iteritems():  # If lead not filtered out, csvrow is added to csvdict
-            for rowkey, rowval in csvrow.iteritems():
-                if key == rowkey:
-                    value.append(rowval)
-        return counter, csvrow, csvdict
-
-    def csv_write(self, csvdict):
+    def csv_write(self, csvdata):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="sample.csv"'
         writer = csv.writer(response)
-        writer.writerow(csvdict[1][1].keys())
-        for row in csvdict:
+        writer.writerow(csvdata[1][1].keys())
+        for row in csvdata:
             writer.writerow(row[1].values())
-        # writer.writerows(zip(*csvdict.values()))
         return response
 
+    def object_create(self, key, object_list):
+        object_part = "'" + key + "', document ->> '" + key + "'"
+        object_list.append(object_part)
+        return object_list
+
+    def range_filter(self, key, value, param, querySTR, data_type, filter_clause):
+        if value[0] == "" and value[1] == "":
+            pass
+        elif value[1] != "" and value[1] != "":
+            param.append(value[0])
+            param.append(value[1])
+            paramSTR = "CAST(document->>'" + key + "' AS " + data_type + " ) BETWEEN %s AND %s "
+            querySTR.append(paramSTR)
+            filter_clause = 1
+        elif value[0] != "" and value[1] == "":
+            param.append(value[1])
+            paramSTR = "CAST(document->>'" + key + "' AS " + data_type + " ) < %s "
+            querySTR.append(paramSTR)
+            filter_clause = 1
+        elif value[0] == "" and value[1] != "":
+            param.append(value[1])
+            paramSTR = "CAST(document->>'" + key + "' AS " + data_type + " ) < %s "
+            querySTR.append(paramSTR)
+            filter_clause = 1
+        return param, querySTR, filter_clause
 
     def SQL_filter(self, filters, fielddata):
         object_list, param, querySTR, querySQL = [], [], [], []
         filter_clause = 0
-        # selectSTR = "SELECT id, document FROM leads WHERE "
         selectSTR = "SELECT id, JSONB_BUILD_OBJECT( "
         selectSTR2 = ") AS JSONDOC FROM leads WHERE "
         for key, value in filters.iteritems():
-            object_part = "'" + key + "', document ->> '" + key +"'"
-            object_list.append(object_part)
+            object_list = self.object_create(key, object_list)
             if fielddata[key] in "integer":
-                if value[1] == "" and value[2] == "":
-                    pass
-                elif value[1] != "" and value[2] != "":
-                    param.append(value[1])
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS integer) BETWEEN %s AND %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] != "" and value[2] == "":
-                    param.append(value[1])
-                    paramSTR = "CAST(document->>'" + key + "' AS integer) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] == "" and value[2] != "":
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS integer) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
+                data_type = "integer"
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
             elif fielddata[key] in "currency float":
-                if value[1] == "" and value[2] == "":
-                    pass
-                elif value[1] != "" and value[2] != "":
-                    param.append(value[1])
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS float) BETWEEN %s AND %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] != "" and value[2] == "":
-                    param.append(value[1])
-                    paramSTR = "CAST(document->>'" + key + "' AS float) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] == "" and value[2] != "":
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS float) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
+                data_type = "float"
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
             elif fielddata[key] in "date datetime":
-                if value[1] == "" and value[2] == "":
-                    pass
-                elif value[1] != "" and value[2] != "":
-                    param.append(value[1])
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS date) BETWEEN %s AND %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] != "" and value[2] == "":
-                    param.append(value[1])
-                    paramSTR = "CAST(document->>'" + key + "' AS date) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
-                elif value[1] == "" and value[2] != "":
-                    param.append(value[2])
-                    paramSTR = "CAST(document->>'" + key + "' AS date) < %s "
-                    querySTR.append(paramSTR)
-                    filter_clause = 1
+                data_type = "date"
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
             elif fielddata[key] in "string email phone text url":
-                if value[1] == "":
+                if value == "":
                     pass
                 else:
-                    string_param = "%%" + value[1] + "%%"
+                    string_param = "%%" + value + "%%"
                     param.append(string_param)
                     paramSTR = "document->>'" + key + "' ILIKE %s"
                     querySTR.append(paramSTR)
                     filter_clause = 1
             elif fielddata[key] in "boolean":
-                if value[1] == "both":
+                if value == "both":
                     pass
-                elif value[1] == "true":
+                elif value == "true":
                     paramSTR = "document->>'" + key + "' is true"
                     querySTR.append(paramSTR)
                     filter_clause = 1
-                elif value[1] == "false":
+                elif value == "false":
                     paramSTR = "document->>'" + key + "' is false"
                     querySTR.append(paramSTR)
                     filter_clause = 1
@@ -310,23 +217,15 @@ class FilterView(LeadView, ListView):
         elif filter_clause == 1:
             selectSTR2 = ") AS JSONDOC FROM leads WHERE "
             finalSTR = selectSTR + objectSTR + selectSTR2 + sqlSTR
-            print finalSTR
             cursor.execute(finalSTR, param)
             queryFIN = cursor.fetchall()
         return queryFIN
 
 
     def post(self, request):
-        # filters is dict where: key= rest_name, value= [ datatype, filter_value or min_value, max_value if range]
         filters, fields = self.user_filters(request)
         fielddata = request.session['fielddata']
-
-        leader = Leads.object.all().values('document')
-        counter, csvdict, csvrow = 0, {}, {}
-        for filterkey, filterval in filters.iteritems():
-            csvdict.update({filterkey: []})  # filterkeys become headers for CSV
         queryFIN = self.SQL_filter(filters, fielddata)
-        counter, csvrow, csvdict = self.filter_leads(leader, filters, counter, csvrow, csvdict, fields)
         response = self.csv_write(queryFIN)
 
         return response
