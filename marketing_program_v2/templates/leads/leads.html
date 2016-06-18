@@ -14,6 +14,7 @@
     <div class="col-md-7">
       <form action="view/" method="post" name="fieldselect">
         {% csrf_token %}
+        <div class="col-md-12">
           <select multiple="multiple", name="selectfields" id="fields">
             {% for field in fields %}
               {% if field.rest_name == 'id' %}
@@ -33,25 +34,24 @@
               {% endif %}
             {% endfor %}
           </select>
-          <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-2">
-              <input type="submit" class="btn btn-success btn-md" id="get_leads" name="get_leads" value="Get Leads">
-            </div>
-            <div class="col-md-6">
-              <input type="button" class="btn btn-warning btn-sm" id="deselect_all" value="Deselect All">
-            </div>
-            <!--<div class="col-md-3"></div>-->
+        </div>
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-2">
+            <input type="submit" class="btn btn-success btn-md" id="get_leads" name="get_leads" value="Get Leads">
           </div>
-        </form>
+          <div class="col-md-2"></div>
+          <div class="col-md-6">
+            <input type="button" class="btn btn-warning btn-sm" id="deselect_all" value="Deselect All">
+          </div>
+        </div>
+      </form>
     </div>
-
-
-  <div class="col-md-3">
-    Name of Field Set<br>
-      <input type="text" name="customfields_name" id="customfieldsName"><br>
-      <input type="button" class="btn btn-primary btn-sm" name="save_fields" value="Save Fields">
-  </div>
+    <div class="col-md-3">
+      Name of Field Set<br>
+        <input type="text" name="customfields_name" id="customfieldsName"><br>
+        <input type="button" class="btn btn-primary btn-sm" name="save_fields" value="Save Fields">
+    </div>
     <div class="col-md-2">
         <select multiple="multiple" id="custom_names">
           <option id="custom_default" selected>Default</option>
@@ -62,6 +62,7 @@
     </div>
   </div>
 </div>
+
 
 
 
