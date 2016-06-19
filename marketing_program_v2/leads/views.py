@@ -74,7 +74,6 @@ class LeadView(AboutView, ListView):
             for lead in queryset:
                 for json, document in lead.iteritems():
                     if header in document:
-                        print document[header]
                         tabledict[header].append(document[header])
                     else:
                         tabledict[header].append("---")
