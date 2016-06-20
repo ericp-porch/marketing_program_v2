@@ -30,8 +30,8 @@ class LeadView(AboutView, ListView):
     def datatype_retrieval(self, request):
         lead_num = Leads.object.all().count()  # Total number of leads in database
         fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
-        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-
+        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
+        #
         # for x in range(0, 300, 100):
         #     range_of_ids = range(x, x + 101)
         #     json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids, fields=fields).build()
@@ -116,10 +116,16 @@ class FilterView(LeadView, ListView):
                 fields.append(value)
             elif '_start' in key and 'id' not in key:  # non-date ranges are converted to floats
                 a = key[:-6]  # "start" is removed form the rest name, then value is made into key for 'filters' entry
-                b = float(value)  # start value converted from string to float
+                if value == "":
+                    b = value
+                else:
+                    b = float(value)  # start value converted from string to float
                 for key2, value2 in request.POST.items():
                     if a + '_end' in key2:
-                        c = float(value2)  # The 'end' or max value is converted to float to be added to 'filters'
+                        if value2 == "":
+                            c = value2
+                        else:
+                            c = float(value2)  # The 'end' or max value is converted to float to be added to 'filters'
                 filters.update({a: [b, c]})  # non-date and non-id range is added to 'filters'
             elif 'dstart' in key and 'id' not in key:  # date and datetime variables are NOT converted to floats
                 a = key[:-6]
@@ -133,15 +139,6 @@ class FilterView(LeadView, ListView):
             elif '_boolean' in key:
                 filters.update({key[:-8]: value})
         return filters, fields
-
-    def csv_write(self, csvdata):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="sample.csv"'
-        writer = csv.writer(response)
-        writer.writerow(csvdata[1][1].keys())
-        for row in csvdata:
-            writer.writerow(row[1].values())
-        return response
 
     def object_create(self, key, object_list):
         object_part = "'" + key + "', document ->> '" + key + "'"
@@ -198,11 +195,11 @@ class FilterView(LeadView, ListView):
                 if value == "both":
                     pass
                 elif value == "true":
-                    paramSTR = "document->>'" + key + "' is true"
+                    paramSTR = "CAST(document->>'" + key + "' AS boolean) = TRUE "
                     querySTR.append(paramSTR)
                     filter_clause = 1
                 elif value == "false":
-                    paramSTR = "document->>'" + key + "' is false"
+                    paramSTR = "CAST(document->>'" + key + "' AS boolean) = FALSE "
                     querySTR.append(paramSTR)
                     filter_clause = 1
         sqlSTR = "AND ".join(querySTR)
@@ -217,15 +214,26 @@ class FilterView(LeadView, ListView):
             selectSTR2 = ") AS JSONDOC FROM leads WHERE "
             finalSTR = selectSTR + objectSTR + selectSTR2 + sqlSTR
             cursor.execute(finalSTR, param)
-            queryFIN = cursor.fetchall()
-        return queryFIN
+            csvdata = cursor.fetchall()
+        return csvdata
 
+    def csv_write(self, csvdata, filters):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="sample.csv"'
+        writer = csv.writer(response)
+        if not csvdata:
+            writer.writerow(filters.keys())
+        else:
+            writer.writerow(csvdata[1][1].keys())
+            for row in csvdata:
+                writer.writerow(row[1].values())
+        return response
 
     def post(self, request):
         filters, fields = self.user_filters(request)
         fielddata = request.session['fielddata']
-        queryFIN = self.SQL_filter(filters, fielddata)
-        response = self.csv_write(queryFIN)
+        csvdata = self.SQL_filter(filters, fielddata)
+        response = self.csv_write(csvdata, filters)
 
         return response
 
