@@ -30,6 +30,7 @@ class LeadView(AboutView, ListView):
     def datatype_retrieval(self, request):
         lead_num = Leads.object.all().count()  # Total number of leads in database
         fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
+        fields.insert(0,"id")
         # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
         # for x in range(0, 300, 100):
@@ -209,7 +210,7 @@ class FilterView(LeadView, ListView):
             selectSTR2 = ") AS JSONDOC FROM leads "
             finalSTR = selectSTR + objectSTR + selectSTR2
             cursor.execute(finalSTR)
-            queryFIN = cursor.fetchall()
+            csvdata = cursor.fetchall()
         elif filter_clause == 1:
             selectSTR2 = ") AS JSONDOC FROM leads WHERE "
             finalSTR = selectSTR + objectSTR + selectSTR2 + sqlSTR

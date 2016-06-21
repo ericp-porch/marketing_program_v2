@@ -36,12 +36,12 @@ $(document).ready(function(){
 
 // *********************************** Prevent Zero Fields from Being Submitted **********************************
 
-    $("form[name='fieldselect']").submit(function(stop){
-        if($('#fields option:selected').length == 0){
-            alert('Please Select at Least One Field.');
-            stop.preventDefault(stop);
-        }
-    })
+//    $("form[name='fieldselect']").submit(function(stop){
+//        if($('#fields option:selected').length == 0){
+//            alert('Please Select at Least One Field.');
+//            stop.preventDefault(stop);
+//        }
+//    })
 
 // *******************************Search and Filter Fields****************************************
 
@@ -99,14 +99,25 @@ $(document).ready(function(){
 
 // ************************************* Custom Fields Option Select ************************************
 
-    $('#deselect_all').click(function(){
+    $('#deselect_all').on('click', function(){
         $('#fields').multiSelect('deselect_all');
+        return false
+    });
+    $('#deselect_all').on('click', function(){
+        $('#fields').multiSelect('select', ['id']);
         return false;
     });
+
 
     $('#custom_default').click(function(){
         $('#fields').multiSelect('select', ['id', 'email', 'updatedAt', 'createdAt', 'firstName', 'lastName']);
         return false;
+    });
+
+
+    $("#save_fields").click(function(){
+        var fields = document.getElementbyClass("ms-elem-selection");
+        alert(fields);
     });
 
 

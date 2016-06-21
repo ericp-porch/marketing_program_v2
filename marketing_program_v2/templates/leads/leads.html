@@ -18,7 +18,8 @@
           <select multiple="multiple", name="selectfields" id="fields">
             {% for field in fields %}
               {% if field.rest_name == 'id' %}
-                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
+                <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected>
+                  {{ field.display_name }} </option>
               {% elif field.rest_name == 'email' %}
                 <option name="{{ field.rest_name }}" value = "{{ field.rest_name }}" selected> {{ field.display_name }} </option>
               {% elif field.rest_name == 'updatedAt' %}
@@ -50,12 +51,12 @@
     <div class="col-md-3">
       Name of Field Set<br>
         <input type="text" name="customfields_name" id="customfieldsName"><br>
-        <input type="button" class="btn btn-primary btn-sm" name="save_fields" value="Save Fields">
+        <input type="button" class="btn btn-primary btn-sm" id="save_fields" name="save_fields" value="Save Fields">
     </div>
     <div class="col-md-2">
         <select multiple="multiple" id="custom_names">
           <option id="custom_default" selected>Default</option>
-          <option>Option 1</option>
+          <option id="opt1">Option 1</option>
           <option>Option 2</option>
           <option>Option 3</option>
         </select>
