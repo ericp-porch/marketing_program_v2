@@ -8,7 +8,7 @@ import csv
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, FormView
 from .models import Fields, Leads
 import json
 reload(sys)
@@ -20,6 +20,12 @@ class AboutView(ListView):
     context_object_name = "fields"
     model = Fields
     queryset = Fields.object.all()
+
+# class CustomFieldForm(FormView):
+#     def get(self, request):
+#         # if "save_fields" in request.GET:
+#         print "success"
+#         return render(request, "leads/leads.html")
 
 
 class LeadView(AboutView, ListView):
@@ -79,6 +85,7 @@ class LeadView(AboutView, ListView):
                     else:
                         tabledict[header].append("---")
         return tabledict, tablelist
+
 
     def post(self, request):
         if "get_leads" in request.POST:

@@ -116,50 +116,16 @@ $(document).ready(function(){
 
 
     $("#save_fields").click(function(){
-        var fields = document.getElementbyClass("ms-elem-selection");
-        alert(fields);
+        var values = $("#fields>option:checked").map(function() { return $(this).val(); }).get();
+        for (value of values){
+            console.log(value)
+        }
     });
 
 
-// ************************************* Footer Fixed to Bottom of Viewport ************************************
-
-//    var footerResize = function() {
-//        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
-//      };
-//      $(window).resize(footerResize).ready(footerResize);
 
 // ******************************************* Compare Ranges ***************************************************
-//    function compare(){
-//
-//        var numrange = Array.prototype.slice.call(document.querySelectorAll('.numstart, .numend'));
-//        var numlen = numrange.length;
-//        console.log("cpmpare")
-//
-//        for(var i = 0; i < numrange; i++) {
-//            console.log("for")
-//            if (numrange[i][0] != "" && numrange[i][1] != ""){
-//                console.log("2nd")
-//                if (numrange[i][0] > numrange[i][1]){
-//                    console.log("3rd")
-//                    $("form[filterForm]").submit(function(e){
-//                        e.preventDefault();
-//                        console.log("Invalid Data")
-//                        return false;
-//                    })
-//                }else{
-//                console.log("Valid Data")
-//                return true;
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    $('#filterForm').on('submit', function(event){
-////        event.preventDefault();
-//        console.log("form submitted")
-//        compare();
-//    });
+
 
 
 

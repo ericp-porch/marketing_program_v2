@@ -48,19 +48,22 @@
         </div>
       </form>
     </div>
-    <div class="col-md-3">
-      Name of Field Set<br>
-        <input type="text" name="customfields_name" id="customfieldsName"><br>
-        <input type="button" class="btn btn-primary btn-sm" id="save_fields" name="save_fields" value="Save Fields">
-    </div>
-    <div class="col-md-2">
-        <select multiple="multiple" id="custom_names">
-          <option id="custom_default" selected>Default</option>
-          <option id="opt1">Option 1</option>
-          <option>Option 2</option>
-          <option>Option 3</option>
-        </select>
-    </div>
+    <form method="get">
+      {% csrf_token %}
+      <div class="col-md-3">
+        Name of Field Set<br>
+          <input type="text" name="customfields_name" id="customfieldsName"><br>
+          <input type="submit" class="btn btn-primary btn-sm" id="save_fields" name="save_fields" value="Save Fields">
+      </div>
+      <div class="col-md-2">
+          <select multiple="multiple" id="custom_names">
+            <option id="custom_default" selected>Default</option>
+            <option id="opt1">Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+      </div>
+    </form>
   </div>
 </div>
 
