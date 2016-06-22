@@ -99,6 +99,10 @@ $(document).ready(function(){
 
 // ************************************* Custom Fields Option Select ************************************
 
+    $("[name=id]").hover(function(){
+        $("[name=id]").prop("disabled", true)
+    });
+
     $('#deselect_all').on('click', function(){
         $('#fields').multiSelect('deselect_all');
         return false
