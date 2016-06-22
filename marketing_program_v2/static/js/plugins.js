@@ -467,7 +467,6 @@ Plugins include:
     'deselect_all' : function(){
       var ms = this.$element,
           values = ms.val();
-
       ms.find('option').prop('selected', false);
       this.$selectableUl.find('.ms-elem-selectable').removeClass('ms-selected').show();
       this.$selectionUl.find('.ms-optgroup-label').hide();
@@ -478,6 +477,7 @@ Plugins include:
       if (typeof this.options.afterDeselect === 'function') {
         this.options.afterDeselect.call(this, values);
       }
+
     },
 
     sanitize: function(value){

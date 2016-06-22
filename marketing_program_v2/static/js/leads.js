@@ -36,12 +36,12 @@ $(document).ready(function(){
 
 // *********************************** Prevent Zero Fields from Being Submitted **********************************
 
-    $("form[name='fieldselect']").submit(function(stop){
-        if($('#fields option:selected').length == 0){
-            alert('Please Select at Least One Field.');
-            stop.preventDefault(stop);
-        }
-    })
+//    $("form[name='fieldselect']").submit(function(stop){
+//        if($('#fields option:selected').length == 0){
+//            alert('Please Select at Least One Field.');
+//            stop.preventDefault(stop);
+//        }
+//    })
 
 // *******************************Search and Filter Fields****************************************
 
@@ -99,10 +99,15 @@ $(document).ready(function(){
 
 // ************************************* Custom Fields Option Select ************************************
 
-    $('#deselect_all').click(function(){
+    $('#deselect_all').on('click', function(){
         $('#fields').multiSelect('deselect_all');
+        return false
+    });
+    $('#deselect_all').on('click', function(){
+        $('#fields').multiSelect('select', ['id']);
         return false;
     });
+
 
     $('#custom_default').click(function(){
         $('#fields').multiSelect('select', ['id', 'email', 'updatedAt', 'createdAt', 'firstName', 'lastName']);
@@ -110,45 +115,17 @@ $(document).ready(function(){
     });
 
 
-// ************************************* Footer Fixed to Bottom of Viewport ************************************
+    $("#save_fields").click(function(){
+        var values = $("#fields>option:checked").map(function() { return $(this).val(); }).get();
+        for (value of values){
+            console.log(value)
+        }
+    });
 
-//    var footerResize = function() {
-//        $('div.navbar.navbar-default.navbar-fixed-bottom').css('position', $("body").height() + $("div.navbar.navbar-default.navbar-fixed-bottom").innerHeight() > $(window).height() ? "inherit" : "fixed");
-//      };
-//      $(window).resize(footerResize).ready(footerResize);
+
 
 // ******************************************* Compare Ranges ***************************************************
-//    function compare(){
-//
-//        var numrange = Array.prototype.slice.call(document.querySelectorAll('.numstart, .numend'));
-//        var numlen = numrange.length;
-//        console.log("cpmpare")
-//
-//        for(var i = 0; i < numrange; i++) {
-//            console.log("for")
-//            if (numrange[i][0] != "" && numrange[i][1] != ""){
-//                console.log("2nd")
-//                if (numrange[i][0] > numrange[i][1]){
-//                    console.log("3rd")
-//                    $("form[filterForm]").submit(function(e){
-//                        e.preventDefault();
-//                        console.log("Invalid Data")
-//                        return false;
-//                    })
-//                }else{
-//                console.log("Valid Data")
-//                return true;
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    $('#filterForm').on('submit', function(event){
-////        event.preventDefault();
-//        console.log("form submitted")
-//        compare();
-//    });
+
 
 
 

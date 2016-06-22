@@ -1,25 +1,7 @@
 
-
-select#fields {
-    width: 100%;
-}
-
-div.warning {
-    text-align: left;
-    color: rgb(220,230,240);
-}
-
-.lead_num {
-    color: red;
-}
-
 /*********************************************
   CSS for leads.html
 **********************************************/
-
-.testTable {
-
-}
 
 #fieldTable {
     display: inline;
@@ -35,13 +17,36 @@ div.warning {
     height: 200px;
 }
 
+select#fields {
+    width: 100%;
+}
+
+div.warning {
+    text-align: left;
+    color: rgb(220,230,240);
+}
+
+/*********************************************
+  CSS for view.html
+**********************************************/
+
+.lead_num {
+    color: red;
+}
+
 
 /*********************************************
   CSS for the Lead Display Table
 **********************************************/
 
+.pageTable-Leads {
+    overflow-x: scroll;
+    border: 2px solid black;
+}
+
 table.pageTable {
     border-collapse: collapse;
+    margin: auto;
 }
 
 th.pageTable {
@@ -77,6 +82,7 @@ table.filterTable {
     vertical-align: middle;
     width: 80%;
     table-layout: fixed;
+    margin: auto;
 }
 
 tr.filterTable {
