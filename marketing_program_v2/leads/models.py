@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import json
+
 from django.contrib.postgres.fields import JSONField
 from django.db import models, connection
 
@@ -62,13 +64,16 @@ class LeadsManager(models.Manager):
                     default_values[default_keys[key]] = value
             obj, created = Leads.object.update_or_create(id=lead['id'], defaults=default_values)
             if created:
-                print 'created new'
+                dict_todo = {}
+                for key, value in lead.iteritems():
+                    dict_todo[str(key)] = str(value).replace("'", "")
+                cursor.execute(
+                    '''UPDATE leads SET document = '{0}' WHERE id = {1} '''.format(json.dumps(dict_todo), obj.id))
             else:
                 for key, value in lead.iteritems():
-                    print key, value
                     cursor.execute(
                         '''UPDATE leads SET document = jsonb_set(document, '{{{0}}}', '"{1}"') WHERE id = {2}'''.format(
-                            key, value, obj.id))
+                            key, str(value).replace("'", ""), obj.id))
 
 
 class Leads(models.Model):

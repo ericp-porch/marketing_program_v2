@@ -1,16 +1,17 @@
 from __future__ import absolute_import, unicode_literals
 
+import csv
+import json
 import sys
 
-from marketing_program_v2.leads.services import LeadClient
-
-import csv
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView, FormView
+from django.views.generic import ListView, TemplateView
+
+from marketing_program_v2.leads.services import LeadClient
 from .models import Fields, Leads
-import json
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -20,6 +21,7 @@ class AboutView(ListView):
     context_object_name = "fields"
     model = Fields
     queryset = Fields.object.all()
+
 
 # class CustomFieldForm(FormView):
 #     def get(self, request):
@@ -36,7 +38,9 @@ class LeadView(AboutView, ListView):
     def datatype_retrieval(self, request):
         lead_num = Leads.object.all().count()  # Total number of leads in database
         fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
-        fields.insert(0,"id")
+        fields.insert(0, "id")
+
+        # result = get_leads.delay(fields, request.user.client_id, request.user.client_secret, request.user.instance) # LIVE DON'T UNCOMMENT
         # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
         # for x in range(0, 300, 100):
@@ -55,7 +59,7 @@ class LeadView(AboutView, ListView):
 
     def data_sort(self, request, fields, datatypes):
         fielddata = dict(zip(fields, datatypes))  # 'fieldata' is a dictionary with fields and associated data type
-        request.session['fielddata']=fielddata
+        request.session['fielddata'] = fielddata
         string, range1, boolean, dummy = 0, 0, 0, 0
         for field, datatype in fielddata.iteritems():
             if datatype in "string email phone text url":
@@ -85,7 +89,6 @@ class LeadView(AboutView, ListView):
                     else:
                         tabledict[header].append("---")
         return tabledict, tablelist
-
 
     def post(self, request):
         if "get_leads" in request.POST:
@@ -183,13 +186,16 @@ class FilterView(LeadView, ListView):
             object_list = self.object_create(key, object_list)
             if fielddata[key] in "integer":
                 data_type = "integer"
-                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,
+                                                                   filter_clause)
             elif fielddata[key] in "currency float":
                 data_type = "float"
-                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,
+                                                                   filter_clause)
             elif fielddata[key] in "date datetime":
                 data_type = "date"
-                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,filter_clause)
+                param, querySTR, filter_clause = self.range_filter(key, value, param, querySTR, data_type,
+                                                                   filter_clause)
             elif fielddata[key] in "string email phone text url":
                 if value == "":
                     pass

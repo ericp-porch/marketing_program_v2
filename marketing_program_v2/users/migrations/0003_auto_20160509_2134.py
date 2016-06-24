@@ -22,4 +22,9 @@ class Migration(migrations.Migration):
             name='client_secret',
             field=models.CharField(blank=True, max_length=255, verbose_name='Client Secret'),
         ),
+        migrations.AddField(
+            model_name='user',
+            name='instance',
+            field=models.CharField(blank=True, max_length=255, verbose_name='Instance URL'),
+        ),
     ]
