@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, TemplateView
 
 from marketing_program_v2.leads.services import LeadClient
+from marketing_program_v2.tasks import get_leads
 from .models import Fields, Leads
 
 reload(sys)
@@ -37,10 +38,12 @@ class LeadView(AboutView, ListView):
 
     def datatype_retrieval(self, request):
         lead_num = Leads.object.all().count()  # Total number of leads in database
+        ids = Leads.object.values('id')
+        existing_ids = [id['id'] for id in ids]
         fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
         fields.insert(0, "id")
 
-        # result = get_leads.delay(fields, request.user.client_id, request.user.client_secret, request.user.instance) # LIVE DON'T UNCOMMENT
+        # result = get_leads.delay(existing_ids, fields, request.user.client_id, request.user.client_secret, request.user.instance) # LIVE DON'T UNCOMMENT
         # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
         #
         # for x in range(0, 300, 100):
