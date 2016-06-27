@@ -1,17 +1,15 @@
 from __future__ import absolute_import, unicode_literals
 
 import csv
-import json
 import sys
 
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView
 
-from marketing_program_v2.leads.services import LeadClient
-from marketing_program_v2.tasks import get_leads
-from .models import Fields, Leads
+from .models import Leads, Fields
+from .tasks import get_leads
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -42,14 +40,7 @@ class LeadView(AboutView, ListView):
         existing_ids = [id['id'] for id in ids]
         fields = request.POST.getlist('selectfields')  # 'fields' is a list of user-selected rest names
         fields.insert(0, "id")
-
-        # result = get_leads.delay(existing_ids, fields, request.user.client_id, request.user.client_secret, request.user.instance) # LIVE DON'T UNCOMMENT
-        # l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-        #
-        # for x in range(0, 300, 100):
-        #     range_of_ids = range(x, x + 101)
-        #     json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids, fields=fields).build()
-        #     Leads.object.create_leads(json.loads(json_raw).get('result'))
+        result = get_leads.delay(existing_ids, fields, request.user.client_id, request.user.client_secret, request.user.instance) # LIVE DON'T UNCOMMENT
 
         queryset = Leads.object.all().values('document')[:100]  # 'leads' is the Leads table.
         FieldsEntries = Fields.object.all()  # Everything from the 'Fields' database
@@ -253,33 +244,3 @@ class FilterView(LeadView, ListView):
         response = self.csv_write(csvdata, filters)
 
         return response
-
-
-class CommandView(TemplateView):
-    def post(self, request):
-        if not request.user.is_authenticated():
-            return render(request, "404.html")
-
-        # LIVE VERSION
-        l = LeadClient(request.user.client_id, request.user.client_secret, request.user.instance)
-        build1 = l.with_path('/rest/v1/leads/describe.json').build()
-        Fields.object.create_fields(json.loads(build1).get('result'))
-        # for x in range(600, 10000, 100):
-        #     range_of_ids = range(x, x + 101)
-        #     json_raw = l.with_path('/rest/v1/leads.json').get_leads('Id', range_of_ids).build()
-        #     Leads.object.create_leads(json.loads(json_raw).get('result'))
-
-        # FROM STATIC FILE
-        # f = open('static/leads.json', 'r')
-        # read = f.read()
-        # Leads.object.create_leads(json.loads(read).get('result'))
-
-        values = Leads.object.all()[:1].values('document')[0].get('document').keys()
-        leads = Leads.object.all()[:100].values('document')
-
-        return render(request, "leads/command.html", context={'leads': leads, 'values': values})
-
-    def get(self, request):
-        if not request.user.is_authenticated():
-            return render(request, "404.html")
-        return render(request, "leads/command.html")

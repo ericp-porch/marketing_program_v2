@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import json
 
@@ -52,6 +52,14 @@ class Fields(models.Model):
     object = FieldsManager()
 
 
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+
 class LeadsManager(models.Manager):
     def create_leads(self, leads):
         cursor = connection.cursor()
@@ -59,22 +67,24 @@ class LeadsManager(models.Manager):
             default_keys = {'email': 'email', 'updatedAt': 'updated_at', 'createdAt': 'created_at',
                             'firstName': 'first_name', 'lastName': 'last_name'}
             default_values = {}
+            json_values = {}
             for key, value in lead.iteritems():
                 if key in default_keys:
                     default_values[default_keys[key]] = value
             obj, created = Leads.object.update_or_create(id=lead['id'], defaults=default_values)
-            if created:
-                dict_todo = {}
-                for key, value in lead.iteritems():
-                    dict_todo[str(key)] = str(value).replace("'", "")
-                cursor.execute(
-                    '''UPDATE leads SET document = '{0}' WHERE id = {1} '''.format(json.dumps(dict_todo), obj.id))
-            else:
-                for key, value in lead.iteritems():
-                    cursor.execute(
-                        '''UPDATE leads SET document = jsonb_set(document, '{{{0}}}', '"{1}"') WHERE id = {2}'''.format(
-                            key, str(value).replace("'", ""), obj.id))
 
+            # if created:
+            #     dict_todo = {}
+            #     for key, value in lead.iteritems():
+            #         dict_todo[str(key)] = str(value).replace("'", "")
+            #     cursor.execute(
+            #         '''UPDATE leads SET document = '{0}' WHERE id = {1} '''.format(json.dumps(dict_todo), obj.id))
+            # else:
+            #     for key, value in lead.iteritems():
+            #         cursor.execute(
+            #             '''UPDATE leads SET document = jsonb_set(document, '{{{0}}}', '"{1}"') WHERE id = {2}'''.format(
+            #                 key, str(value).replace("'", ""), obj.id))
+            #
 
 class Leads(models.Model):
     id = models.IntegerField("id", primary_key=True)
