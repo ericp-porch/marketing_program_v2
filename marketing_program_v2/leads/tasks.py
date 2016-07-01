@@ -13,12 +13,12 @@ def get_leads(existing_ids, fields, client_id, client_secret, instance):
     if not existing_ids:
         for x in range(0, 1000, 100):
             range_of_ids = range(x, x + 101)
-            db_function(l, range_of_ids, fields)
+            # db_function(l, range_of_ids, fields)
 
     else:
         list_of_hundreds = [existing_ids[i:i + 100] for i in range(0, len(existing_ids), 100)]
         for every_list in list_of_hundreds:
-            db_function(l, every_list, fields)
+            # db_function(l, every_list, fields)
 
 
 def db_function(l, every_list, fields):
